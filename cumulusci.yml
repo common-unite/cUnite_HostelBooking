@@ -1,0 +1,51 @@
+minimum_cumulusci_version: '3.43.0'
+project:
+    name: cUnite_HostelBooking
+    package:
+        name: 'cUnite Hostel Booking'
+        namespace: cUnite
+        api_version: '64.0'
+    git:
+    source_format: sfdx
+
+flows:
+
+    dev_org:
+        steps:
+            5:
+                task: assign_permission_sets
+                options:
+                    api_names: Hostel_Booking_Admin
+
+    release_2gp_beta:
+        steps:
+            90:
+                task: github_release_notes
+                options:
+                    tag_name: "latest_beta"
+
+    release_2gp_production:
+        steps:
+            90:
+                task: github_release_notes
+                options:
+                    tag_name: "latest"
+
+tasks:
+
+    run_tests:
+        options:
+            required_org_code_coverage_percent: 90
+
+orgs:
+    scratch:
+        build:
+            config_file: orgs/build.json
+
+        packaging:
+            config_file: orgs/packaging.json
+
+        dev:
+            config_file: orgs/dev.json
+            days: 30
+            namespaced: True

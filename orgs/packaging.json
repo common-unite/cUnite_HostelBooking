@@ -1,0 +1,22 @@
+{
+    "orgName": "cUnite Hostel Booking - Packaging",
+    "edition": "Developer",
+    "features": [
+        "EnableSetPasswordInApi",
+        "Communities"
+    ],
+    "settings": {
+        "lightningExperienceSettings": {
+            "enableS1DesktopEnabled": true
+        },
+        "mobileSettings": {
+            "enableS1EncryptedStoragePref2": false
+        },
+        "experienceSettings": {
+            "enableExperienceBundleBasedSna498": true
+        },
+        "ordersSettings": {
+            "enableOrders": true
+        }
+    }
+}
