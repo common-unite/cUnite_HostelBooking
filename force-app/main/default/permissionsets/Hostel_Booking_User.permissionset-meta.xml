@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Hostel Booking User</label>
+    <description>Guest-facing access for searching availability and making bookings</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <license>Salesforce</license>
+
+    <!-- Apex Classes — controllers only, not services directly -->
+    <classAccesses>
+        <apexClass>Hostel_AvailabilityController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>Hostel_BookingController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+
+    <!-- Product2 Fields (read-only) -->
+    <fieldPermissions>
+        <field>Product2.cUnite__Gender__c</field>
+        <readable>true</readable>
+        <editable>false</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Product2.cUnite__Pricing_Model__c</field>
+        <readable>true</readable>
+        <editable>false</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Product2.cUnite__Max_Guests__c</field>
+        <readable>true</readable>
+        <editable>false</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Product2.cUnite__Amenities__c</field>
+        <readable>true</readable>
+        <editable>false</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Product2.cUnite__Image_URL__c</field>
+        <readable>true</readable>
+        <editable>false</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Product2.cUnite__Display_Order__c</field>
+        <readable>true</readable>
+        <editable>false</editable>
+    </fieldPermissions>
+
+    <!-- Asset Fields (read-only) -->
+    <fieldPermissions>
+        <field>Asset.cUnite__Is_Bookable__c</field>
+        <readable>true</readable>
+        <editable>false</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Asset.cUnite__Floor__c</field>
+        <readable>true</readable>
+        <editable>false</editable>
+    </fieldPermissions>
+
+    <!-- Opportunity Fields -->
+    <fieldPermissions>
+        <field>Opportunity.cUnite__Check_In_Date__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Opportunity.cUnite__Check_Out_Date__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Opportunity.cUnite__Number_of_Nights__c</field>
+        <readable>true</readable>
+        <editable>false</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Opportunity.cUnite__Number_of_Guests__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Opportunity.cUnite__Confirmation_Number__c</field>
+        <readable>true</readable>
+        <editable>false</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Opportunity.cUnite__Special_Requests__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+
+    <!-- OpportunityLineItem Fields -->
+    <fieldPermissions>
+        <field>OpportunityLineItem.cUnite__Asset__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>OpportunityLineItem.cUnite__Number_of_Guests__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+</PermissionSet>

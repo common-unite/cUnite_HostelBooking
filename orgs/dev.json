@@ -11,12 +11,6 @@
         },
         "mobileSettings": {
             "enableS1EncryptedStoragePref2": false
-        },
-        "experienceSettings": {
-            "enableExperienceBundleBasedSna498": true
-        },
-        "ordersSettings": {
-            "enableOrders": true
         }
     }
 }

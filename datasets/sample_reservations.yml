@@ -1,0 +1,336 @@
+# Snowfakery recipe — sample reservations only
+# Run against an org that already has sample_data.yml loaded (Products, Assets, PricebookEntries)
+# Creates guest Contacts, Opportunities, and OpportunityLineItems to demonstrate availability calculation
+#
+# Expected availability after load:
+#   Women's 8-Bed:  5 of 8 reserved → "3 LEFT!"
+#   Women's 4-Bed:  3 of 4 reserved → "1 LEFT!"
+#   Men's 4-Bed:    1 of 4 reserved → "3 LEFT!"
+#   Queen Ensuite:  1 of 3 reserved → "2 LEFT!"
+#   Queen & Bunks:  2 of 4 reserved → "2 LEFT!"
+
+- plugin: snowfakery.standard_plugins.Salesforce.SalesforceQuery
+
+# ============================================================
+# Guest Records
+# ============================================================
+
+- object: Account
+  nickname: guest_account
+  fields:
+    Name: Sample Guests
+
+- object: Contact
+  nickname: guest_jane
+  fields:
+    AccountId:
+      reference: guest_account
+    FirstName: Jane
+    LastName: Doe
+    Email: jane.doe@example.com
+
+- object: Contact
+  nickname: guest_john
+  fields:
+    AccountId:
+      reference: guest_account
+    FirstName: John
+    LastName: Smith
+    Email: john.smith@example.com
+
+# ============================================================
+# Opportunities — Reservations overlapping today
+# ============================================================
+
+- object: Opportunity
+  nickname: opp_jane
+  fields:
+    Name: Hostel Reservation - Jane Doe
+    CloseDate: ${{today}}
+    StageName: Prospecting
+    Pricebook2Id:
+      SalesforceQuery.find_record:
+        from: Pricebook2
+        where: IsStandard = true
+    cUnite__Check_In_Date__c: ${{today}}
+    cUnite__Check_Out_Date__c: ${{today + relativedelta(days=3)}}
+    cUnite__Number_of_Guests__c: 5
+
+- object: Opportunity
+  nickname: opp_john
+  fields:
+    Name: Hostel Reservation - John Smith
+    CloseDate: ${{today}}
+    StageName: Prospecting
+    Pricebook2Id:
+      SalesforceQuery.find_record:
+        from: Pricebook2
+        where: IsStandard = true
+    cUnite__Check_In_Date__c: ${{today}}
+    cUnite__Check_Out_Date__c: ${{today + relativedelta(days=2)}}
+    cUnite__Number_of_Guests__c: 5
+
+- object: Opportunity
+  nickname: opp_jane2
+  fields:
+    Name: Hostel Reservation - Jane Doe Family
+    CloseDate: ${{today}}
+    StageName: Prospecting
+    Pricebook2Id:
+      SalesforceQuery.find_record:
+        from: Pricebook2
+        where: IsStandard = true
+    cUnite__Check_In_Date__c: ${{today}}
+    cUnite__Check_Out_Date__c: ${{today + relativedelta(days=5)}}
+    cUnite__Number_of_Guests__c: 6
+
+# ============================================================
+# OpportunityLineItems — One per reserved bed/room
+# ============================================================
+
+# --- Opp 1 (Jane): 3 Women's 8-Bed beds ---
+- object: OpportunityLineItem
+  fields:
+    OpportunityId:
+      reference: opp_jane
+    Product2Id:
+      SalesforceQuery.find_record:
+        from: Product2
+        where: Name LIKE 'Women%8-Bed Dorm'
+    PricebookEntryId:
+      SalesforceQuery.find_record:
+        from: PricebookEntry
+        where: Product2.Name LIKE 'Women%8-Bed Dorm' AND Pricebook2.IsStandard = true
+    Quantity: 1
+    UnitPrice: 39.00
+    cUnite__Asset__c:
+      SalesforceQuery.find_record:
+        from: Asset
+        where: Name = 'W8-Bed-101-1'
+    cUnite__Number_of_Guests__c: 1
+
+- object: OpportunityLineItem
+  fields:
+    OpportunityId:
+      reference: opp_jane
+    Product2Id:
+      SalesforceQuery.find_record:
+        from: Product2
+        where: Name LIKE 'Women%8-Bed Dorm'
+    PricebookEntryId:
+      SalesforceQuery.find_record:
+        from: PricebookEntry
+        where: Product2.Name LIKE 'Women%8-Bed Dorm' AND Pricebook2.IsStandard = true
+    Quantity: 1
+    UnitPrice: 39.00
+    cUnite__Asset__c:
+      SalesforceQuery.find_record:
+        from: Asset
+        where: Name = 'W8-Bed-101-2'
+    cUnite__Number_of_Guests__c: 1
+
+- object: OpportunityLineItem
+  fields:
+    OpportunityId:
+      reference: opp_jane
+    Product2Id:
+      SalesforceQuery.find_record:
+        from: Product2
+        where: Name LIKE 'Women%8-Bed Dorm'
+    PricebookEntryId:
+      SalesforceQuery.find_record:
+        from: PricebookEntry
+        where: Product2.Name LIKE 'Women%8-Bed Dorm' AND Pricebook2.IsStandard = true
+    Quantity: 1
+    UnitPrice: 39.00
+    cUnite__Asset__c:
+      SalesforceQuery.find_record:
+        from: Asset
+        where: Name = 'W8-Bed-101-3'
+    cUnite__Number_of_Guests__c: 1
+
+# --- Opp 1 (Jane): 2 Women's 4-Bed beds ---
+- object: OpportunityLineItem
+  fields:
+    OpportunityId:
+      reference: opp_jane
+    Product2Id:
+      SalesforceQuery.find_record:
+        from: Product2
+        where: Name LIKE 'Women%4-Bed Dorm'
+    PricebookEntryId:
+      SalesforceQuery.find_record:
+        from: PricebookEntry
+        where: Product2.Name LIKE 'Women%4-Bed Dorm' AND Pricebook2.IsStandard = true
+    Quantity: 1
+    UnitPrice: 49.00
+    cUnite__Asset__c:
+      SalesforceQuery.find_record:
+        from: Asset
+        where: Name = 'W4-Bed-201-1'
+    cUnite__Number_of_Guests__c: 1
+
+- object: OpportunityLineItem
+  fields:
+    OpportunityId:
+      reference: opp_jane
+    Product2Id:
+      SalesforceQuery.find_record:
+        from: Product2
+        where: Name LIKE 'Women%4-Bed Dorm'
+    PricebookEntryId:
+      SalesforceQuery.find_record:
+        from: PricebookEntry
+        where: Product2.Name LIKE 'Women%4-Bed Dorm' AND Pricebook2.IsStandard = true
+    Quantity: 1
+    UnitPrice: 49.00
+    cUnite__Asset__c:
+      SalesforceQuery.find_record:
+        from: Asset
+        where: Name = 'W4-Bed-201-2'
+    cUnite__Number_of_Guests__c: 1
+
+# --- Opp 2 (John): 2 Women's 8-Bed beds ---
+- object: OpportunityLineItem
+  fields:
+    OpportunityId:
+      reference: opp_john
+    Product2Id:
+      SalesforceQuery.find_record:
+        from: Product2
+        where: Name LIKE 'Women%8-Bed Dorm'
+    PricebookEntryId:
+      SalesforceQuery.find_record:
+        from: PricebookEntry
+        where: Product2.Name LIKE 'Women%8-Bed Dorm' AND Pricebook2.IsStandard = true
+    Quantity: 1
+    UnitPrice: 39.00
+    cUnite__Asset__c:
+      SalesforceQuery.find_record:
+        from: Asset
+        where: Name = 'W8-Bed-101-4'
+    cUnite__Number_of_Guests__c: 1
+
+- object: OpportunityLineItem
+  fields:
+    OpportunityId:
+      reference: opp_john
+    Product2Id:
+      SalesforceQuery.find_record:
+        from: Product2
+        where: Name LIKE 'Women%8-Bed Dorm'
+    PricebookEntryId:
+      SalesforceQuery.find_record:
+        from: PricebookEntry
+        where: Product2.Name LIKE 'Women%8-Bed Dorm' AND Pricebook2.IsStandard = true
+    Quantity: 1
+    UnitPrice: 39.00
+    cUnite__Asset__c:
+      SalesforceQuery.find_record:
+        from: Asset
+        where: Name = 'W8-Bed-101-5'
+    cUnite__Number_of_Guests__c: 1
+
+# --- Opp 2 (John): 1 Women's 4-Bed bed ---
+- object: OpportunityLineItem
+  fields:
+    OpportunityId:
+      reference: opp_john
+    Product2Id:
+      SalesforceQuery.find_record:
+        from: Product2
+        where: Name LIKE 'Women%4-Bed Dorm'
+    PricebookEntryId:
+      SalesforceQuery.find_record:
+        from: PricebookEntry
+        where: Product2.Name LIKE 'Women%4-Bed Dorm' AND Pricebook2.IsStandard = true
+    Quantity: 1
+    UnitPrice: 49.00
+    cUnite__Asset__c:
+      SalesforceQuery.find_record:
+        from: Asset
+        where: Name = 'W4-Bed-201-3'
+    cUnite__Number_of_Guests__c: 1
+
+# --- Opp 2 (John): 1 Men's 4-Bed bed ---
+- object: OpportunityLineItem
+  fields:
+    OpportunityId:
+      reference: opp_john
+    Product2Id:
+      SalesforceQuery.find_record:
+        from: Product2
+        where: Name LIKE 'Men%4-Bed Dorm'
+    PricebookEntryId:
+      SalesforceQuery.find_record:
+        from: PricebookEntry
+        where: Product2.Name LIKE 'Men%4-Bed Dorm' AND Pricebook2.IsStandard = true
+    Quantity: 1
+    UnitPrice: 54.00
+    cUnite__Asset__c:
+      SalesforceQuery.find_record:
+        from: Asset
+        where: Name = 'M4-Bed-202-1'
+    cUnite__Number_of_Guests__c: 1
+
+# --- Opp 2 (John): 1 Private Queen Ensuite ---
+- object: OpportunityLineItem
+  fields:
+    OpportunityId:
+      reference: opp_john
+    Product2Id:
+      SalesforceQuery.find_record:
+        from: Product2
+        where: Name = 'Private Queen Ensuite'
+    PricebookEntryId:
+      SalesforceQuery.find_record:
+        from: PricebookEntry
+        where: Product2.Name = 'Private Queen Ensuite' AND Pricebook2.IsStandard = true
+    Quantity: 1
+    UnitPrice: 159.00
+    cUnite__Asset__c:
+      SalesforceQuery.find_record:
+        from: Asset
+        where: Name = 'PQ-Room-301'
+    cUnite__Number_of_Guests__c: 2
+
+# --- Opp 3 (Jane): 2 Private Queen & Bunks rooms ---
+- object: OpportunityLineItem
+  fields:
+    OpportunityId:
+      reference: opp_jane2
+    Product2Id:
+      SalesforceQuery.find_record:
+        from: Product2
+        where: Name = 'Private Queen & Bunks Ensuite'
+    PricebookEntryId:
+      SalesforceQuery.find_record:
+        from: PricebookEntry
+        where: Product2.Name = 'Private Queen & Bunks Ensuite' AND Pricebook2.IsStandard = true
+    Quantity: 1
+    UnitPrice: 189.00
+    cUnite__Asset__c:
+      SalesforceQuery.find_record:
+        from: Asset
+        where: Name = 'PQB-Room-301'
+    cUnite__Number_of_Guests__c: 4
+
+- object: OpportunityLineItem
+  fields:
+    OpportunityId:
+      reference: opp_jane2
+    Product2Id:
+      SalesforceQuery.find_record:
+        from: Product2
+        where: Name = 'Private Queen & Bunks Ensuite'
+    PricebookEntryId:
+      SalesforceQuery.find_record:
+        from: PricebookEntry
+        where: Product2.Name = 'Private Queen & Bunks Ensuite' AND Pricebook2.IsStandard = true
+    Quantity: 1
+    UnitPrice: 189.00
+    cUnite__Asset__c:
+      SalesforceQuery.find_record:
+        from: Asset
+        where: Name = 'PQB-Room-302'
+    cUnite__Number_of_Guests__c: 4

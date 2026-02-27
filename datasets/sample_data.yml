@@ -1,0 +1,289 @@
+# Snowfakery recipe for hostel booking sample data
+# Creates 5 accommodation types with assets, pricebook entries, and sample reservations
+
+- plugin: snowfakery.standard_plugins.Salesforce.SalesforceQuery
+
+# ============================================================
+# Account — Property Owner (required parent for Assets)
+# ============================================================
+
+- object: Account
+  nickname: hostel_account
+  fields:
+    Name: HI USA Downtown Hostel
+
+# ============================================================
+# Product2 — Accommodation Types
+# ============================================================
+
+- object: Product2
+  nickname: womens_8bed
+  fields:
+    Name: Women's 8-Bed Dorm
+    Family: Dorm Bed
+    IsActive: true
+    cUnite__Gender__c: "Women's"
+    cUnite__Pricing_Model__c: Per Person
+    cUnite__Max_Guests__c: 8
+    cUnite__Display_Order__c: 10
+    cUnite__Amenities__c: |
+      1 Twin Bunk Bed in a Women's only 8-bed dormitory
+      Room shared with hostel-assigned roommates
+      Air Conditioning
+      Free self-service laundry
+      Free Wi-Fi
+      Locker in Room
+      Bed linen and towel provided
+      Shared hallway bathrooms (single user stalls)
+
+- object: Product2
+  nickname: womens_4bed
+  fields:
+    Name: Women's 4-Bed Dorm
+    Family: Dorm Bed
+    IsActive: true
+    cUnite__Gender__c: "Women's"
+    cUnite__Pricing_Model__c: Per Person
+    cUnite__Max_Guests__c: 4
+    cUnite__Display_Order__c: 20
+    cUnite__Amenities__c: |
+      1 Twin Bunk Bed in a Women's only 4-bed dormitory
+      Room shared with hostel-assigned roommates
+      Air Conditioning
+      Free self-service laundry
+      Free Wi-Fi
+      Locker in Room
+      Bed linen and towel provided
+      In-room bathroom
+
+- object: Product2
+  nickname: mens_4bed
+  fields:
+    Name: Men's 4-Bed Dorm
+    Family: Dorm Bed
+    IsActive: true
+    cUnite__Gender__c: "Men's"
+    cUnite__Pricing_Model__c: Per Person
+    cUnite__Max_Guests__c: 4
+    cUnite__Display_Order__c: 30
+    cUnite__Amenities__c: |
+      1 Twin Bunk Bed in a Men's only 4-bed dormitory
+      Room shared with hostel-assigned roommates
+      Air Conditioning
+      Free self-service laundry
+      Free Wi-Fi
+      Locker in Room
+      Bed linen and towel provided
+      Shared hallway bathrooms (single user stalls)
+
+- object: Product2
+  nickname: queen_ensuite
+  fields:
+    Name: Private Queen Ensuite
+    Family: Private Room
+    IsActive: true
+    cUnite__Gender__c: N/A
+    cUnite__Pricing_Model__c: Per Room
+    cUnite__Max_Guests__c: 2
+    cUnite__Display_Order__c: 40
+    cUnite__Amenities__c: |
+      1 Queen Bed in a private room
+      Private ensuite bathroom
+      Air Conditioning
+      Free Wi-Fi
+      Bed linen and towel provided
+      Desk and chair
+      Mini fridge
+
+- object: Product2
+  nickname: queen_bunks
+  fields:
+    Name: Private Queen & Bunks Ensuite
+    Family: Private Room
+    IsActive: true
+    cUnite__Gender__c: N/A
+    cUnite__Pricing_Model__c: Per Room
+    cUnite__Max_Guests__c: 6
+    cUnite__Display_Order__c: 50
+    cUnite__Amenities__c: |
+      1 Queen Bed plus 2 Twin Bunk Beds in a private room
+      Private ensuite bathroom
+      Air Conditioning
+      Free Wi-Fi
+      Bed linen and towel provided
+      Ideal for families or groups up to 6
+
+# ============================================================
+# PricebookEntry — Standard Pricebook Rates
+# ============================================================
+
+- object: PricebookEntry
+  nickname: pbe_w8
+  fields:
+    Product2Id:
+      reference: womens_8bed
+    Pricebook2Id:
+      SalesforceQuery.find_record:
+        from: Pricebook2
+        where: IsStandard = true
+    UnitPrice: 39.00
+    IsActive: true
+
+- object: PricebookEntry
+  nickname: pbe_w4
+  fields:
+    Product2Id:
+      reference: womens_4bed
+    Pricebook2Id:
+      SalesforceQuery.find_record:
+        from: Pricebook2
+        where: IsStandard = true
+    UnitPrice: 49.00
+    IsActive: true
+
+- object: PricebookEntry
+  nickname: pbe_m4
+  fields:
+    Product2Id:
+      reference: mens_4bed
+    Pricebook2Id:
+      SalesforceQuery.find_record:
+        from: Pricebook2
+        where: IsStandard = true
+    UnitPrice: 54.00
+    IsActive: true
+
+- object: PricebookEntry
+  nickname: pbe_qe
+  fields:
+    Product2Id:
+      reference: queen_ensuite
+    Pricebook2Id:
+      SalesforceQuery.find_record:
+        from: Pricebook2
+        where: IsStandard = true
+    UnitPrice: 159.00
+    IsActive: true
+
+- object: PricebookEntry
+  nickname: pbe_qb
+  fields:
+    Product2Id:
+      reference: queen_bunks
+    Pricebook2Id:
+      SalesforceQuery.find_record:
+        from: Pricebook2
+        where: IsStandard = true
+    UnitPrice: 189.00
+    IsActive: true
+
+# ============================================================
+# Asset — Physical Rooms & Beds
+# ============================================================
+
+# Women's 8-Bed Dorm: 1 parent room + 8 child beds
+- object: Asset
+  nickname: w8_room
+  fields:
+    Name: W8-Room-101
+    Product2Id:
+      reference: womens_8bed
+    AccountId:
+      reference: hostel_account
+    Status: Installed
+    cUnite__Is_Bookable__c: false
+    cUnite__Floor__c: "1st Floor"
+
+- object: Asset
+  count: 8
+  fields:
+    Name: W8-Bed-101-${{child_index + 1}}
+    Product2Id:
+      reference: womens_8bed
+    ParentId:
+      reference: w8_room
+    AccountId:
+      reference: hostel_account
+    Status: Installed
+    cUnite__Is_Bookable__c: true
+    cUnite__Floor__c: "1st Floor"
+
+# Women's 4-Bed Dorm: 1 parent room + 4 child beds
+- object: Asset
+  nickname: w4_room
+  fields:
+    Name: W4-Room-201
+    Product2Id:
+      reference: womens_4bed
+    AccountId:
+      reference: hostel_account
+    Status: Installed
+    cUnite__Is_Bookable__c: false
+    cUnite__Floor__c: "2nd Floor"
+
+- object: Asset
+  count: 4
+  fields:
+    Name: W4-Bed-201-${{child_index + 1}}
+    Product2Id:
+      reference: womens_4bed
+    ParentId:
+      reference: w4_room
+    AccountId:
+      reference: hostel_account
+    Status: Installed
+    cUnite__Is_Bookable__c: true
+    cUnite__Floor__c: "2nd Floor"
+
+# Men's 4-Bed Dorm: 1 parent room + 4 child beds
+- object: Asset
+  nickname: m4_room
+  fields:
+    Name: M4-Room-202
+    Product2Id:
+      reference: mens_4bed
+    AccountId:
+      reference: hostel_account
+    Status: Installed
+    cUnite__Is_Bookable__c: false
+    cUnite__Floor__c: "2nd Floor"
+
+- object: Asset
+  count: 4
+  fields:
+    Name: M4-Bed-202-${{child_index + 1}}
+    Product2Id:
+      reference: mens_4bed
+    ParentId:
+      reference: m4_room
+    AccountId:
+      reference: hostel_account
+    Status: Installed
+    cUnite__Is_Bookable__c: true
+    cUnite__Floor__c: "2nd Floor"
+
+# Private Queen Ensuite: 3 bookable rooms (no children)
+- object: Asset
+  count: 3
+  fields:
+    Name: PQ-Room-30${{child_index + 1}}
+    Product2Id:
+      reference: queen_ensuite
+    AccountId:
+      reference: hostel_account
+    Status: Installed
+    cUnite__Is_Bookable__c: true
+    cUnite__Floor__c: "3rd Floor"
+
+# Private Queen & Bunks Ensuite: 4 bookable rooms (no children)
+- object: Asset
+  count: 4
+  fields:
+    Name: PQB-Room-30${{child_index + 1}}
+    Product2Id:
+      reference: queen_bunks
+    AccountId:
+      reference: hostel_account
+    Status: Installed
+    cUnite__Is_Bookable__c: true
+    cUnite__Floor__c: "3rd Floor"

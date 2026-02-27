@@ -17,11 +17,11 @@ A hostel room/bed reservation system for Salesforce orgs, surfaced through LWR E
 
 | Layer | Object | Purpose |
 |-------|--------|---------|
-| Catalog | Product2 (RecordType: Accommodation) | Accommodation types |
+| Catalog | Product2 | Accommodation types (Family: Dorm Bed / Private Room) |
 | Pricing | PricebookEntry | Nightly rates |
-| Inventory | Asset (RecordType: Accommodation) | Physical rooms/beds with hierarchy |
-| Booking | Order (RecordType: Reservation) | Reservations with check-in/out dates |
-| Booking Detail | OrderItem | Line items linking to specific Asset |
+| Inventory | Asset | Physical rooms/beds with hierarchy |
+| Booking | Opportunity | Reservations with check-in/out dates (StageName lifecycle) |
+| Booking Detail | OpportunityLineItem | Line items linking to specific Asset |
 | Guest | Contact | Guest records |
 
 ## Rules for Claude

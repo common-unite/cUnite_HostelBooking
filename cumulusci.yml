@@ -10,12 +10,14 @@ project:
 
 flows:
 
-    dev_org:
+    config_dev:
         steps:
-            5:
+            3:
                 task: assign_permission_sets
                 options:
-                    api_names: Hostel_Booking_Admin
+                    api_names: Hostel_Booking_Admin,Hostel_Booking_User
+            91:
+                task: load_sample_reservations
 
     release_2gp_beta:
         steps:
@@ -32,6 +34,16 @@ flows:
                     tag_name: "latest"
 
 tasks:
+
+    load_sample_data:
+        class_path: cumulusci.tasks.bulkdata.snowfakery.Snowfakery
+        options:
+            recipe: datasets/sample_data.yml
+
+    load_sample_reservations:
+        class_path: cumulusci.tasks.bulkdata.snowfakery.Snowfakery
+        options:
+            recipe: datasets/sample_reservations.yml
 
     run_tests:
         options:

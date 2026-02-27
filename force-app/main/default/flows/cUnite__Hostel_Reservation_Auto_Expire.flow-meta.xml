@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <description>Auto-expires hostel reservation Opportunities that remain in Prospecting stage after 15 minutes. Only fires on Opportunities with a Check-In Date (hostel bookings only).</description>
+    <environments>Default</environments>
+    <interviewLabel>Hostel Reservation Auto Expire {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Hostel Reservation Auto Expire</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>cUnite__Check_In_Date__c</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <object>Opportunity</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <scheduledPaths>
+            <name>Expire_After_15_Minutes</name>
+            <label>Expire After 15 Minutes</label>
+            <connector>
+                <targetReference>Check_Still_Prospecting</targetReference>
+            </connector>
+            <offsetNumber>15</offsetNumber>
+            <offsetUnit>Minutes</offsetUnit>
+            <timeSource>RecordTriggerEvent</timeSource>
+        </scheduledPaths>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+
+    <!-- Decision: Is the Opportunity still in Prospecting stage? -->
+    <decisions>
+        <name>Check_Still_Prospecting</name>
+        <label>Check Still Prospecting</label>
+        <locationX>176</locationX>
+        <locationY>335</locationY>
+        <defaultConnectorLabel>Already Progressed</defaultConnectorLabel>
+        <rules>
+            <name>Is_Prospecting</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.StageName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Prospecting</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Close_As_Lost</targetReference>
+            </connector>
+            <label>Is Prospecting</label>
+        </rules>
+    </decisions>
+
+    <!-- Update: Set StageName to Closed Lost -->
+    <recordUpdates>
+        <name>Close_As_Lost</name>
+        <label>Close As Lost</label>
+        <locationX>50</locationX>
+        <locationY>455</locationY>
+        <inputAssignments>
+            <field>StageName</field>
+            <value>
+                <stringValue>Closed Lost</stringValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+</Flow>
