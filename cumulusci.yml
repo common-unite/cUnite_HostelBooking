@@ -19,19 +19,6 @@ flows:
             91:
                 task: load_sample_reservations
 
-    release_2gp_beta:
-        steps:
-            90:
-                task: github_release_notes
-                options:
-                    tag_name: "latest_beta"
-
-    release_2gp_production:
-        steps:
-            90:
-                task: github_release_notes
-                options:
-                    tag_name: "latest"
 
 tasks:
 
