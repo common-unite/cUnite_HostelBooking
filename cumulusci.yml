@@ -61,3 +61,7 @@ orgs:
             config_file: orgs/dev.json
             days: 30
             namespaced: True
+
+        release:
+            config_file: orgs/release.json
+            namespaced: True

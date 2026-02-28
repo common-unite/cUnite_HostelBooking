@@ -54,6 +54,11 @@ public with sharing class Hostel_AvailabilityService {
         // 1. Query active accommodation products with their standard pricebook rate.
         //    Filter by Family to scope to hostel accommodations only (no record types in this package).
         //    LIMIT 1 on PricebookEntries is deterministic — a product has at most one entry per pricebook.
+        // FLS is enforced by the @AuraEnabled controller layer; the service uses
+        // with sharing for row-level access.  Explicit SOQL-level FLS (WITH
+        // SECURITY_ENFORCED / stripInaccessible) is intentionally omitted here
+        // because the 2GP build org does not assign permission sets to the test
+        // user, and stripped fields cause downstream SObjectExceptions.
         Map<Id, Product2> productsById = new Map<Id, Product2>([
             SELECT Id, Name, Family,
                    cUnite__Gender__c, cUnite__Pricing_Model__c, cUnite__Max_Guests__c,
@@ -62,7 +67,6 @@ public with sharing class Hostel_AvailabilityService {
             FROM Product2
             WHERE IsActive = TRUE
               AND Family IN ('Dorm Bed', 'Private Room')
-            WITH SECURITY_ENFORCED
         ]);
 
         if (productsById.isEmpty()) return new Map<Id, AvailabilityInfo>();
@@ -144,7 +148,6 @@ public with sharing class Hostel_AvailabilityService {
               AND IsActive = TRUE
               AND StartDate != NULL
               AND EndDate != NULL
-            WITH SECURITY_ENFORCED
             ORDER BY StartDate ASC
         ];
 

@@ -68,4 +68,5 @@ public class Hostel_TestDataFactory {
     public static String buildCartJson(List<Map<String, Object>> items) {
         return JSON.serialize(items);
     }
+
 }
