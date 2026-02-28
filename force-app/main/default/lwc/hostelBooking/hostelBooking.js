@@ -1,4 +1,4 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import getAvailableAccommodations from '@salesforce/apex/Hostel_AvailabilityController.getAvailableAccommodations';
 import createReservation from '@salesforce/apex/Hostel_BookingController.createReservation';
 
@@ -12,6 +12,9 @@ const GUEST_OPTIONS = Array.from({ length: 10 }, (_, i) => ({
 }));
 
 export default class HostelBooking extends LightningElement {
+    @api heading = 'Book Your Stay';
+    @api flowApiName;
+
     // Search parameters
     checkInDate;
     checkOutDate;
@@ -25,6 +28,8 @@ export default class HostelBooking extends LightningElement {
     isBooking = false;
     error;
     bookingSuccess;
+    _showFlow = false;
+    @track _flowInputVariables = [];
 
     // --- Lifecycle ---
 
@@ -96,18 +101,27 @@ export default class HostelBooking extends LightningElement {
         return this.cartItems.length > 0;
     }
 
-    get hasNoCartItems() {
-        return !this.hasCartItems;
-    }
-
     get isBookNowDisabled() {
         return !this.hasCartItems || this.isBooking;
     }
 
-    get bookNowClass() {
-        return this.hasCartItems
-            ? 'book-now-btn book-now-active'
-            : 'book-now-btn book-now-inactive';
+    get showBookNowHint() {
+        return !this.hasCartItems;
+    }
+
+    get formattedCartTotal() {
+        const total = this.enrichedCartItems.reduce((sum, i) => sum + i.lineTotal, 0);
+        return '$' + total.toFixed(2);
+    }
+
+    get isShowingBooking() {
+        return !this._showFlow;
+    }
+
+    get errorClass() {
+        return this.error
+            ? 'slds-notify slds-notify_alert slds-alert_error'
+            : 'slds-hide';
     }
 
     get nightCount() {
@@ -151,7 +165,8 @@ export default class HostelBooking extends LightningElement {
                 qtyOptions,
                 quantityStr: String(qty),
                 dateRange: this.dateRangeLabel,
-                nightCount: nights + ' ' + this.nightLabel
+                nightCount: nights + ' ' + this.nightLabel,
+                removeLabel: 'Remove ' + item.name
             });
         });
     }
@@ -217,6 +232,13 @@ export default class HostelBooking extends LightningElement {
         });
     }
 
+    handleFlowStatusChange(event) {
+        if (event.detail.status === 'FINISHED' || event.detail.status === 'FINISHED_SCREEN') {
+            this._showFlow = false;
+            this.bookingSuccess = 'Reservation completed successfully!';
+        }
+    }
+
     handleRemoveItem(event) {
         const productId = event.currentTarget.dataset.id;
         this.cartItems = this.cartItems.filter(ci => ci.productId !== productId);
@@ -241,9 +263,16 @@ export default class HostelBooking extends LightningElement {
             itemsJson: JSON.stringify(items)
         })
             .then(oppId => {
-                this.bookingSuccess = 'Reservation created successfully! (ID: ' + oppId + ')';
                 this.cartItems = [];
                 this._fetchAvailability();
+                if (this.flowApiName) {
+                    this._flowInputVariables = [
+                        { name: 'recordId', type: 'String', value: oppId }
+                    ];
+                    this._showFlow = true;
+                } else {
+                    this.bookingSuccess = 'Reservation created successfully! (ID: ' + oppId + ')';
+                }
             })
             .catch(err => {
                 this.error = err.body ? err.body.message : 'Booking failed. Please try again.';
@@ -259,24 +288,7 @@ export default class HostelBooking extends LightningElement {
         const isSelected = this.cartItems.some(ci => ci.productId === acc.productId);
         const isExpanded = !!this.expandedIds[acc.productId];
         const isPerson = acc.pricingModel === 'Per Person';
-        const rateLabel = isPerson ? 'PER PERSON' : 'PER ROOM';
-
-        // Gender icon styling
-        let genderClass, iconCount;
-        if (acc.gender === "Women's") {
-            genderClass = 'gender-icon gender-female';
-            iconCount = 1;
-        } else if (acc.gender === "Men's") {
-            genderClass = 'gender-icon gender-male';
-            iconCount = 1;
-        } else if (acc.gender === 'Mixed') {
-            genderClass = 'gender-icon gender-mixed';
-            iconCount = 2;
-        } else {
-            genderClass = 'gender-icon gender-private';
-            iconCount = Math.min(acc.maxGuests, 6);
-        }
-        const genderIcons = Array.from({ length: iconCount }, (_, i) => ({ key: i }));
+        const rateBasis = isPerson ? '/ person / night' : '/ room / night';
 
         // Availability badge
         const availLabel = acc.availableUnits + ' LEFT!';
@@ -288,27 +300,23 @@ export default class HostelBooking extends LightningElement {
             : [];
 
         const formattedRate = acc.rate != null ? '$' + acc.rate.toFixed(2) : '';
-        const priceDollars = acc.rate != null ? '$' + Math.floor(acc.rate) : '';
-        const priceCents = acc.rate != null ? '.' + acc.rate.toFixed(2).split('.')[1] : '';
 
         const chevronIcon = isExpanded ? 'utility:chevronup' : 'utility:chevrondown';
+        const expandLabel = isExpanded ? 'Collapse ' + acc.name : 'Expand ' + acc.name;
         const cardClass = 'room-card' + (isSelected ? ' room-card-selected' : '');
 
         return Object.assign({}, acc, {
             isSelected,
             isExpanded,
-            rateLabel,
-            genderClass,
-            genderIcons,
+            rateBasis,
             availLabel,
             availClass,
             amenitiesList,
             hasAmenities: amenitiesList.length > 0,
             hasImage: !!acc.imageUrl,
             formattedRate,
-            priceDollars,
-            priceCents,
             chevronIcon,
+            expandLabel,
             cardClass
         });
     }
