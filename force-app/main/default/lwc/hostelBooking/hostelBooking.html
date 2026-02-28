@@ -114,6 +114,8 @@
                             type="date"
                             label="Check in"
                             value={checkInDate}
+                            min={datePickerMin}
+                            max={datePickerMax}
                             onchange={handleCheckInChange}
                         ></lightning-input>
                     </div>
@@ -122,9 +124,16 @@
                             type="date"
                             label="Check out"
                             value={checkOutDate}
+                            min={datePickerMin}
+                            max={datePickerMax}
                             onchange={handleCheckOutChange}
                         ></lightning-input>
                     </div>
+                    <template lwc:if={hasDateError}>
+                        <div class="slds-text-color_error slds-p-bottom_small slds-text-body_small">
+                            {dateError}
+                        </div>
+                    </template>
                     <div class="slds-p-bottom_medium">
                         <lightning-combobox
                             label="Guests"

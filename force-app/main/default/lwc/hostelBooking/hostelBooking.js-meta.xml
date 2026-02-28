@@ -15,6 +15,7 @@
         <targetConfig targets="lightningCommunity__Default,lightning__HomePage,lightning__AppPage,lightning__RecordPage">
             <property name="heading" type="String" label="Heading" default="Book Your Stay" />
             <property name="flowApiName" type="String" label="Post-Booking Flow API Name" description="API name of a screen flow to launch after booking. The Opportunity Id is passed as the recordId input variable." />
+            <property name="campaignType" type="String" label="Campaign Type" description="Campaign.Type value that defines valid booking date ranges. Leave blank for unrestricted dates." />
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

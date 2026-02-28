@@ -9,6 +9,20 @@ public with sharing class Hostel_AvailabilityService {
     private static final Integer DEFAULT_DISPLAY_ORDER = 999;
 
     /**
+     * A contiguous date window during which bookings are allowed.
+     * Returned from getBookingDateRanges after merging overlapping Campaign periods.
+     */
+    public class DateRange {
+        @AuraEnabled public Date startDate;
+        @AuraEnabled public Date endDate;
+
+        public DateRange(Date startDate, Date endDate) {
+            this.startDate = startDate;
+            this.endDate = endDate;
+        }
+    }
+
+    /**
      * Wrapper returned to callers with everything the UI needs per accommodation type.
      */
     public class AvailabilityInfo {
@@ -109,5 +123,80 @@ public with sharing class Hostel_AvailabilityService {
         }
 
         return results;
+    }
+
+    /**
+     * Query Campaign records of the given type and return merged, non-overlapping
+     * date windows that represent valid booking periods.
+     *
+     * Merge algorithm: sort by StartDate, then walk the list — if the next range
+     * overlaps or is adjacent (start ≤ current end + 1 day), extend the current
+     * range.  Otherwise, close it and start a new one.
+     *
+     * @param campaignType  The Campaign.Type value to filter on
+     * @return Merged list of DateRange (empty list if no matching campaigns)
+     */
+    public List<DateRange> getBookingDateRanges(String campaignType) {
+        List<Campaign> campaigns = [
+            SELECT StartDate, EndDate
+            FROM Campaign
+            WHERE Type = :campaignType
+              AND IsActive = TRUE
+              AND StartDate != NULL
+              AND EndDate != NULL
+            WITH SECURITY_ENFORCED
+            ORDER BY StartDate ASC
+        ];
+
+        List<DateRange> merged = new List<DateRange>();
+        if (campaigns.isEmpty()) return merged;
+
+        DateRange current = new DateRange(campaigns[0].StartDate, campaigns[0].EndDate);
+        for (Integer i = 1; i < campaigns.size(); i++) {
+            Date nextStart = campaigns[i].StartDate;
+            Date nextEnd = campaigns[i].EndDate;
+            // Adjacent or overlapping: next starts on or before current end + 1 day
+            if (nextStart <= current.endDate.addDays(1))
+                current.endDate = nextEnd > current.endDate ? nextEnd : current.endDate;
+            else {
+                merged.add(current);
+                current = new DateRange(nextStart, nextEnd);
+            }
+        }
+        merged.add(current);
+
+        return merged;
+    }
+
+    /**
+     * Check whether a date range falls entirely within at least one of the given
+     * booking windows.  Used by controllers for server-side validation.
+     *
+     * @param checkInDate   Desired check-in
+     * @param checkOutDate  Desired check-out
+     * @param ranges        Merged campaign date ranges
+     * @return true if the stay fits within a single window, false otherwise
+     */
+    public Boolean isDateRangeValid(Date checkInDate, Date checkOutDate, List<DateRange> ranges) {
+        if (ranges == null || ranges.isEmpty()) return true; // no restrictions
+        for (DateRange r : ranges) {
+            if (checkInDate >= r.startDate && checkOutDate <= r.endDate)
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * Format merged date ranges into a human-readable string for error messages.
+     * Example: "May 1 – Sep 30, Dec 15 – Jan 5"
+     */
+    public String formatDateRanges(List<DateRange> ranges) {
+        List<String> parts = new List<String>();
+        for (DateRange r : ranges) {
+            parts.add(
+                r.startDate.format() + ' – ' + r.endDate.format()
+            );
+        }
+        return String.join(parts, ', ');
     }
 }

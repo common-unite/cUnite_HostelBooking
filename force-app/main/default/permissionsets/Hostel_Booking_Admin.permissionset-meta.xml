@@ -5,6 +5,17 @@
     <hasActivationRequired>false</hasActivationRequired>
     <license>Salesforce</license>
 
+    <!-- Campaign (read access for booking date ranges) -->
+    <objectPermissions>
+        <object>Campaign</object>
+        <allowCreate>true</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+
     <!-- Apex Classes -->
     <classAccesses>
         <apexClass>Hostel_AvailabilityController</apexClass>
@@ -61,11 +72,6 @@
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>
-    <fieldPermissions>
-        <field>Asset.cUnite__Floor__c</field>
-        <readable>true</readable>
-        <editable>true</editable>
-    </fieldPermissions>
 
     <!-- Opportunity Fields -->
     <fieldPermissions>
@@ -85,16 +91,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <field>Opportunity.cUnite__Number_of_Guests__c</field>
-        <readable>true</readable>
-        <editable>true</editable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <field>Opportunity.cUnite__Confirmation_Number__c</field>
-        <readable>true</readable>
-        <editable>true</editable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <field>Opportunity.cUnite__Special_Requests__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>

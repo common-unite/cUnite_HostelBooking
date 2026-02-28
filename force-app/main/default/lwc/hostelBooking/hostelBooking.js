@@ -1,5 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
 import getAvailableAccommodations from '@salesforce/apex/Hostel_AvailabilityController.getAvailableAccommodations';
+import getBookingDateRanges from '@salesforce/apex/Hostel_AvailabilityController.getBookingDateRanges';
 import createReservation from '@salesforce/apex/Hostel_BookingController.createReservation';
 
 const FAMILY_DORM = 'Dorm Bed';
@@ -14,6 +15,7 @@ const GUEST_OPTIONS = Array.from({ length: 10 }, (_, i) => ({
 export default class HostelBooking extends LightningElement {
     @api heading = 'Book Your Stay';
     @api flowApiName;
+    @api campaignType;
 
     // Search parameters
     checkInDate;
@@ -27,9 +29,13 @@ export default class HostelBooking extends LightningElement {
     isLoading = false;
     isBooking = false;
     error;
+    dateError;
     bookingSuccess;
     _showFlow = false;
     @track _flowInputVariables = [];
+
+    // Campaign date ranges
+    _dateRanges = [];
 
     // --- Lifecycle ---
 
@@ -39,7 +45,12 @@ export default class HostelBooking extends LightningElement {
         tomorrow.setDate(tomorrow.getDate() + 1);
         this.checkInDate = this._toIsoDate(today);
         this.checkOutDate = this._toIsoDate(tomorrow);
-        this._fetchAvailability();
+
+        if (this.campaignType) {
+            this._fetchDateRanges();
+        } else {
+            this._fetchAvailability();
+        }
     }
 
     // --- Imperative Apex ---
@@ -49,7 +60,8 @@ export default class HostelBooking extends LightningElement {
         getAvailableAccommodations({
             checkInDate: this.checkInDate,
             checkOutDate: this.checkOutDate,
-            guests: parseInt(this.guestCount, 10) || 1
+            guests: parseInt(this.guestCount, 10) || 1,
+            campaignType: this.campaignType || ''
         })
             .then(data => {
                 this.accommodations = data.map(item => ({ ...item }));
@@ -102,7 +114,7 @@ export default class HostelBooking extends LightningElement {
     }
 
     get isBookNowDisabled() {
-        return !this.hasCartItems || this.isBooking;
+        return !this.hasCartItems || this.isBooking || !!this.dateError;
     }
 
     get showBookNowHint() {
@@ -138,6 +150,27 @@ export default class HostelBooking extends LightningElement {
 
     get dateRangeLabel() {
         return this._formatShortDate(this.checkInDate) + ' - ' + this._formatShortDate(this.checkOutDate);
+    }
+
+    get datePickerMin() {
+        if (!this._dateRanges || this._dateRanges.length === 0) return undefined;
+        return this._dateRanges[0].startDate;
+    }
+
+    get datePickerMax() {
+        if (!this._dateRanges || this._dateRanges.length === 0) return undefined;
+        return this._dateRanges[this._dateRanges.length - 1].endDate;
+    }
+
+    get formattedDateRanges() {
+        if (!this._dateRanges || this._dateRanges.length === 0) return '';
+        return this._dateRanges.map(r =>
+            this._formatShortDate(r.startDate) + ' – ' + this._formatShortDate(r.endDate)
+        ).join(', ');
+    }
+
+    get hasDateError() {
+        return !!this.dateError;
     }
 
     get enrichedCartItems() {
@@ -180,12 +213,14 @@ export default class HostelBooking extends LightningElement {
             next.setDate(next.getDate() + 1);
             this.checkOutDate = this._toIsoDate(next);
         }
-        this._fetchAvailability();
+        if (this._validateDatesAgainstRanges())
+            this._fetchAvailability();
     }
 
     handleCheckOutChange(event) {
         this.checkOutDate = event.detail.value;
-        this._fetchAvailability();
+        if (this._validateDatesAgainstRanges())
+            this._fetchAvailability();
     }
 
     handleGuestChange(event) {
@@ -260,7 +295,8 @@ export default class HostelBooking extends LightningElement {
             checkInDate: this.checkInDate,
             checkOutDate: this.checkOutDate,
             guests: parseInt(this.guestCount, 10) || 1,
-            itemsJson: JSON.stringify(items)
+            itemsJson: JSON.stringify(items),
+            campaignType: this.campaignType || ''
         })
             .then(oppId => {
                 this.cartItems = [];
@@ -337,5 +373,60 @@ export default class HostelBooking extends LightningElement {
         if (!isoStr) return '';
         const d = new Date(isoStr + 'T00:00:00');
         return DAY_NAMES[d.getDay()] + ' ' + MONTH_NAMES[d.getMonth()] + ' ' + d.getDate();
+    }
+
+    _fetchDateRanges() {
+        getBookingDateRanges({ campaignType: this.campaignType })
+            .then(ranges => {
+                this._dateRanges = ranges;
+                this._constrainDatesToRanges();
+                this._fetchAvailability();
+            })
+            .catch(() => {
+                // If campaign query fails, proceed unrestricted
+                this._dateRanges = [];
+                this._fetchAvailability();
+            });
+    }
+
+    _constrainDatesToRanges() {
+        if (!this._dateRanges || this._dateRanges.length === 0) return;
+
+        const fitsInOneWindow = this._dateRanges.some(
+            r => this.checkInDate >= r.startDate && this.checkOutDate <= r.endDate
+        );
+
+        if (!fitsInOneWindow) {
+            // Snap to the first valid range
+            const first = this._dateRanges[0];
+            this.checkInDate = first.startDate;
+            const next = new Date(first.startDate + 'T00:00:00');
+            next.setDate(next.getDate() + 1);
+            const snappedCheckOut = this._toIsoDate(next);
+            this.checkOutDate = snappedCheckOut <= first.endDate ? snappedCheckOut : first.endDate;
+        }
+        this.dateError = undefined;
+    }
+
+    _validateDatesAgainstRanges() {
+        if (!this._dateRanges || this._dateRanges.length === 0) {
+            this.dateError = undefined;
+            return true;
+        }
+
+        // Mirror the server-side check: the entire stay must fit within a SINGLE window.
+        // Checking check-in and check-out individually would miss stays that span a gap
+        // between two campaign windows.
+        const fitsInOneWindow = this._dateRanges.some(
+            r => this.checkInDate >= r.startDate && this.checkOutDate <= r.endDate
+        );
+
+        if (!fitsInOneWindow) {
+            this.dateError = 'Selected dates are outside the available booking periods: ' + this.formattedDateRanges;
+            return false;
+        }
+
+        this.dateError = undefined;
+        return true;
     }
 }
