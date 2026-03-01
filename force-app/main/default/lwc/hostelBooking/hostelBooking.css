@@ -1,15 +1,24 @@
 /* ============================
-   Hostel Booking — SLDS Native
+   Hostel Booking — Theme-Aware
+   Uses --dxp-g-* tokens from LWR Experience Builder theme
+   with SLDS fallbacks for non-LWR contexts
    ============================ */
 
 :host {
-    --color-border: #e5e5e5;
-    --color-text-muted: var(--slds-g-color-neutral-base-40, #5c5c5c);
+    --color-brand: var(--dxp-g-brand, var(--slds-g-color-brand-base-50, #0176d3));
+    --color-brand-contrast: var(--dxp-g-brand-contrast, #ffffff);
+    --color-brand-light: var(--dxp-g-brand-1, #eef4ff);
+    --color-text: var(--dxp-g-root-contrast, var(--slds-g-color-neutral-base-10, #181818));
+    --color-text-secondary: var(--dxp-g-neutral, var(--slds-g-color-neutral-base-30, #444));
+    --color-text-muted: var(--dxp-g-neutral-1, var(--slds-g-color-neutral-base-40, #5c5c5c));
+    --color-border: var(--dxp-g-neutral-2, #e5e5e5);
+    --color-error: var(--dxp-g-destructive, var(--slds-g-color-error-base-40, #ea001e));
+    --color-error-bg: var(--dxp-g-destructive-1, #fff3f3);
 }
 
 /* Header banner */
 .header-banner {
-    background: var(--slds-g-color-brand-base-50, #0176d3);
+    background: var(--color-brand);
     padding: 1.25rem 1.5rem;
     border-radius: 4px 4px 0 0;
     margin-bottom: 1rem;
@@ -18,7 +27,7 @@
 .banner-title {
     font-size: 1.75rem;
     font-weight: 300;
-    color: #ffffff;
+    color: var(--color-brand-contrast);
     letter-spacing: -0.01em;
     margin: 0;
     line-height: 1.2;
@@ -29,7 +38,7 @@
     font-size: 1.25rem;
     font-weight: 700;
     margin: 1.5rem 0 0.75rem;
-    color: var(--slds-g-color-neutral-base-10, #181818);
+    color: var(--color-text);
 }
 
 /* Room card */
@@ -41,8 +50,8 @@
 }
 
 .room-card-selected {
-    border-left: 3px solid var(--slds-g-color-brand-base-50, #0176d3);
-    background-color: var(--slds-g-color-brand-base-95, #eef4ff);
+    border-left: 3px solid var(--color-brand);
+    background-color: var(--color-brand-light);
 }
 
 .room-row {
@@ -53,14 +62,14 @@
 .avail-badge {
     font-size: 0.75rem;
     font-weight: 700;
-    color: var(--slds-g-color-neutral-base-30, #444);
+    color: var(--color-text-secondary);
     white-space: nowrap;
     margin-left: 0.5rem;
 }
 
 .avail-low {
-    color: var(--slds-g-color-error-base-40, #ea001e);
-    background: #fff3f3;
+    color: var(--color-error);
+    background: var(--color-error-bg);
     padding: 1px 5px;
     border-radius: 3px;
 }
@@ -90,7 +99,7 @@
 .room-price {
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--slds-g-color-neutral-base-10, #181818);
+    color: var(--color-text);
 }
 
 /* Room detail (expanded) */
@@ -111,7 +120,7 @@
     margin: 0;
     font-size: 0.875rem;
     line-height: 1.6;
-    color: var(--slds-g-color-neutral-base-30, #444);
+    color: var(--color-text-secondary);
 }
 
 /* Book Now button — full width in card */
@@ -176,7 +185,7 @@
 
 /* Cart total */
 .cart-total-row {
-    border-top: 2px solid var(--slds-g-color-neutral-base-10, #181818);
+    border-top: 2px solid var(--color-text);
     padding-top: 0.75rem;
     margin-top: 0.25rem;
 }
