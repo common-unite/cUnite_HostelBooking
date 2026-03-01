@@ -17,7 +17,7 @@
         <locationY>0</locationY>
         <filterLogic>and</filterLogic>
         <filters>
-            <field>cUnite__Check_In_Date__c</field>
+            <field>Check_In_Date__c</field>
             <operator>IsNull</operator>
             <value>
                 <booleanValue>false</booleanValue>

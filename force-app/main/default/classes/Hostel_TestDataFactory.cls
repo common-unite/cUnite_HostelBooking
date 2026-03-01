@@ -9,20 +9,20 @@ public class Hostel_TestDataFactory {
             Name = 'Mixed Dorm Bed',
             Family = 'Dorm Bed',
             IsActive = true,
-            cUnite__Gender__c = 'Mixed',
-            cUnite__Pricing_Model__c = 'Per Person',
-            cUnite__Max_Guests__c = 1,
-            cUnite__Amenities__c = 'WiFi\nLocker',
-            cUnite__Display_Order__c = 1
+            Gender__c = 'Mixed',
+            Pricing_Model__c = 'Per Person',
+            Max_Guests__c = 1,
+            Amenities__c = 'WiFi\nLocker',
+            Display_Order__c = 1
         );
         Product2 privateProduct = new Product2(
             Name = 'Queen Room',
             Family = 'Private Room',
             IsActive = true,
-            cUnite__Gender__c = 'N/A',
-            cUnite__Pricing_Model__c = 'Per Room',
-            cUnite__Max_Guests__c = 2,
-            cUnite__Display_Order__c = 2
+            Gender__c = 'N/A',
+            Pricing_Model__c = 'Per Room',
+            Max_Guests__c = 2,
+            Display_Order__c = 2
         );
         insert new List<Product2>{ dormProduct, privateProduct };
 
@@ -37,13 +37,13 @@ public class Hostel_TestDataFactory {
         for (Integer i = 1; i <= 3; i++) {
             assets.add(new Asset(
                 Name = 'Dorm Bed ' + i, AccountId = acc.Id,
-                Product2Id = dormProduct.Id, cUnite__Is_Bookable__c = true
+                Product2Id = dormProduct.Id, Is_Bookable__c = true
             ));
         }
         for (Integer i = 1; i <= 2; i++) {
             assets.add(new Asset(
                 Name = 'Queen Room ' + i, AccountId = acc.Id,
-                Product2Id = privateProduct.Id, cUnite__Is_Bookable__c = true
+                Product2Id = privateProduct.Id, Is_Bookable__c = true
             ));
         }
         insert assets;

@@ -27,14 +27,14 @@ private class Hostel_BookingService_Test {
         );
 
         Assert.isNotNull(oppId);
-        Opportunity opp = [SELECT StageName, cUnite__Check_In_Date__c, cUnite__Check_Out_Date__c, cUnite__Number_of_Guests__c FROM Opportunity WHERE Id = :oppId];
+        Opportunity opp = [SELECT StageName, Check_In_Date__c, Check_Out_Date__c, Number_of_Guests__c FROM Opportunity WHERE Id = :oppId];
         Assert.areEqual('Prospecting', opp.StageName);
-        Assert.areEqual(3, opp.cUnite__Number_of_Guests__c);
+        Assert.areEqual(3, opp.Number_of_Guests__c);
 
-        List<OpportunityLineItem> olis = [SELECT Product2Id, cUnite__Asset__c FROM OpportunityLineItem WHERE OpportunityId = :oppId];
+        List<OpportunityLineItem> olis = [SELECT Product2Id, Asset__c FROM OpportunityLineItem WHERE OpportunityId = :oppId];
         Assert.areEqual(3, olis.size(), '2 dorm beds + 1 private room = 3 line items');
         for (OpportunityLineItem oli : olis)
-            Assert.isNotNull(oli.cUnite__Asset__c, 'Each OLI should have an assigned asset');
+            Assert.isNotNull(oli.Asset__c, 'Each OLI should have an assigned asset');
     }
 
     @IsTest
@@ -69,14 +69,14 @@ private class Hostel_BookingService_Test {
             CloseDate = Date.today(),
             StageName = 'Prospecting',
             Pricebook2Id = stdPbId,
-            cUnite__Check_In_Date__c = Date.newInstance(2026, 6, 15),
-            cUnite__Check_Out_Date__c = Date.newInstance(2026, 6, 20)
+            Check_In_Date__c = Date.newInstance(2026, 6, 15),
+            Check_Out_Date__c = Date.newInstance(2026, 6, 20)
         );
         insert existing;
         insert new OpportunityLineItem(
             OpportunityId = existing.Id, Product2Id = dorm.Id,
             PricebookEntryId = pbe.Id, UnitPrice = pbe.UnitPrice,
-            Quantity = 1, cUnite__Asset__c = bed.Id
+            Quantity = 1, Asset__c = bed.Id
         );
 
         // Book 2 of the remaining 2 beds
@@ -92,8 +92,8 @@ private class Hostel_BookingService_Test {
 
         // Verify the reserved bed was NOT assigned to the new reservation
         Set<Id> assignedAssetIds = new Set<Id>();
-        for (OpportunityLineItem oli : [SELECT cUnite__Asset__c FROM OpportunityLineItem WHERE OpportunityId = :oppId])
-            assignedAssetIds.add(oli.cUnite__Asset__c);
+        for (OpportunityLineItem oli : [SELECT Asset__c FROM OpportunityLineItem WHERE OpportunityId = :oppId])
+            assignedAssetIds.add(oli.Asset__c);
 
         Assert.isFalse(assignedAssetIds.contains(bed.Id), 'Should not assign the already-reserved bed');
         Assert.areEqual(2, assignedAssetIds.size());

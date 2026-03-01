@@ -51,14 +51,14 @@ private class Hostel_AvailabilityService_Test {
             CloseDate = Date.today(),
             StageName = 'Prospecting',
             Pricebook2Id = stdPbId,
-            cUnite__Check_In_Date__c = Date.newInstance(2026, 6, 16),
-            cUnite__Check_Out_Date__c = Date.newInstance(2026, 6, 18)
+            Check_In_Date__c = Date.newInstance(2026, 6, 16),
+            Check_Out_Date__c = Date.newInstance(2026, 6, 18)
         );
         insert opp;
         insert new OpportunityLineItem(
             OpportunityId = opp.Id, Product2Id = dorm.Id,
             PricebookEntryId = pbe.Id, UnitPrice = pbe.UnitPrice,
-            Quantity = 1, cUnite__Asset__c = bed.Id
+            Quantity = 1, Asset__c = bed.Id
         );
 
         Hostel_AvailabilityService service = new Hostel_AvailabilityService();

@@ -36,73 +36,73 @@
 
     <!-- Product2 Fields -->
     <fieldPermissions>
-        <field>Product2.cUnite__Gender__c</field>
+        <field>Product2.Gender__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>
     <fieldPermissions>
-        <field>Product2.cUnite__Pricing_Model__c</field>
+        <field>Product2.Pricing_Model__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>
     <fieldPermissions>
-        <field>Product2.cUnite__Max_Guests__c</field>
+        <field>Product2.Max_Guests__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>
     <fieldPermissions>
-        <field>Product2.cUnite__Amenities__c</field>
+        <field>Product2.Amenities__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>
     <fieldPermissions>
-        <field>Product2.cUnite__Image_URL__c</field>
+        <field>Product2.Image_URL__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>
     <fieldPermissions>
-        <field>Product2.cUnite__Display_Order__c</field>
+        <field>Product2.Display_Order__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>
 
     <!-- Asset Fields -->
     <fieldPermissions>
-        <field>Asset.cUnite__Is_Bookable__c</field>
+        <field>Asset.Is_Bookable__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>
 
     <!-- Opportunity Fields -->
     <fieldPermissions>
-        <field>Opportunity.cUnite__Check_In_Date__c</field>
+        <field>Opportunity.Check_In_Date__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>
     <fieldPermissions>
-        <field>Opportunity.cUnite__Check_Out_Date__c</field>
+        <field>Opportunity.Check_Out_Date__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>
     <fieldPermissions>
-        <field>Opportunity.cUnite__Number_of_Nights__c</field>
+        <field>Opportunity.Number_of_Nights__c</field>
         <readable>true</readable>
         <editable>false</editable>
     </fieldPermissions>
     <fieldPermissions>
-        <field>Opportunity.cUnite__Number_of_Guests__c</field>
+        <field>Opportunity.Number_of_Guests__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>
 
     <!-- OpportunityLineItem Fields -->
     <fieldPermissions>
-        <field>OpportunityLineItem.cUnite__Asset__c</field>
+        <field>OpportunityLineItem.Asset__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>
     <fieldPermissions>
-        <field>OpportunityLineItem.cUnite__Number_of_Guests__c</field>
+        <field>OpportunityLineItem.Number_of_Guests__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>

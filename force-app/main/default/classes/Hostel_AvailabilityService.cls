@@ -44,7 +44,7 @@ public with sharing class Hostel_AvailabilityService {
      * Calculate availability for all active accommodation types within a date range.
      *
      * Date overlap logic: an existing reservation conflicts when
-     *   Opportunity.cUnite__Check_In_Date__c < checkOutDate AND Opportunity.cUnite__Check_Out_Date__c > checkInDate
+     *   Opportunity.Check_In_Date__c < checkOutDate AND Opportunity.Check_Out_Date__c > checkInDate
      *
      * @param checkInDate  Desired check-in date
      * @param checkOutDate Desired check-out date
@@ -61,8 +61,8 @@ public with sharing class Hostel_AvailabilityService {
         // user, and stripped fields cause downstream SObjectExceptions.
         Map<Id, Product2> productsById = new Map<Id, Product2>([
             SELECT Id, Name, Family,
-                   cUnite__Gender__c, cUnite__Pricing_Model__c, cUnite__Max_Guests__c,
-                   cUnite__Amenities__c, cUnite__Image_URL__c, cUnite__Display_Order__c,
+                   Gender__c, Pricing_Model__c, Max_Guests__c,
+                   Amenities__c, Image_URL__c, Display_Order__c,
                    (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2.IsStandard = TRUE LIMIT 1)
             FROM Product2
             WHERE IsActive = TRUE
@@ -77,7 +77,7 @@ public with sharing class Hostel_AvailabilityService {
             SELECT Product2Id, COUNT(Id) cnt
             FROM Asset
             WHERE Product2Id IN :productsById.keySet()
-              AND cUnite__Is_Bookable__c = TRUE
+              AND Is_Bookable__c = TRUE
             GROUP BY Product2Id
         ]) {
             totalByProduct.put((Id) ar.get('Product2Id'), (Integer) ar.get('cnt'));
@@ -88,15 +88,15 @@ public with sharing class Hostel_AvailabilityService {
         //    and the Opp is still open OR closed-won (paid). Excludes only Closed Lost (expired/cancelled).
         Map<Id, Integer> reservedByProduct = new Map<Id, Integer>();
         for (AggregateResult ar : [
-            SELECT cUnite__Asset__r.Product2Id prodId, COUNT_DISTINCT(cUnite__Asset__c) cnt
+            SELECT Asset__r.Product2Id prodId, COUNT_DISTINCT(Asset__c) cnt
             FROM OpportunityLineItem
-            WHERE cUnite__Asset__c != NULL
-              AND cUnite__Asset__r.Product2Id IN :productsById.keySet()
-              AND cUnite__Asset__r.cUnite__Is_Bookable__c = TRUE
-              AND Opportunity.cUnite__Check_In_Date__c < :checkOutDate
-              AND Opportunity.cUnite__Check_Out_Date__c > :checkInDate
+            WHERE Asset__c != NULL
+              AND Asset__r.Product2Id IN :productsById.keySet()
+              AND Asset__r.Is_Bookable__c = TRUE
+              AND Opportunity.Check_In_Date__c < :checkOutDate
+              AND Opportunity.Check_Out_Date__c > :checkInDate
               AND (Opportunity.IsClosed = FALSE OR Opportunity.IsWon = TRUE)
-            GROUP BY cUnite__Asset__r.Product2Id
+            GROUP BY Asset__r.Product2Id
         ]) {
             reservedByProduct.put((Id) ar.get('prodId'), (Integer) ar.get('cnt'));
         }
@@ -108,12 +108,12 @@ public with sharing class Hostel_AvailabilityService {
             info.productId = p.Id;
             info.name = p.Name;
             info.family = p.Family;
-            info.gender = p.cUnite__Gender__c;
-            info.pricingModel = p.cUnite__Pricing_Model__c;
-            info.maxGuests = p.cUnite__Max_Guests__c != null ? (Integer) p.cUnite__Max_Guests__c : DEFAULT_MAX_GUESTS;
-            info.amenities = p.cUnite__Amenities__c;
-            info.imageUrl = p.cUnite__Image_URL__c;
-            info.displayOrder = p.cUnite__Display_Order__c != null ? (Integer) p.cUnite__Display_Order__c : DEFAULT_DISPLAY_ORDER;
+            info.gender = p.Gender__c;
+            info.pricingModel = p.Pricing_Model__c;
+            info.maxGuests = p.Max_Guests__c != null ? (Integer) p.Max_Guests__c : DEFAULT_MAX_GUESTS;
+            info.amenities = p.Amenities__c;
+            info.imageUrl = p.Image_URL__c;
+            info.displayOrder = p.Display_Order__c != null ? (Integer) p.Display_Order__c : DEFAULT_DISPLAY_ORDER;
 
             // Rate from standard pricebook
             if (!p.PricebookEntries.isEmpty()) info.rate = p.PricebookEntries[0].UnitPrice;

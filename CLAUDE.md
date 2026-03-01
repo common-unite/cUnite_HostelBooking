@@ -1,8 +1,8 @@
 # cUnite Hostel Booking
 
 ## Project Overview
-- **Type**: Salesforce 2nd Generation Managed Package (2GP)
-- **Namespace**: `cUnite`
+- **Type**: Salesforce Unlocked Package (non-namespaced)
+
 - **API Version**: 64.0
 - **Build System**: CumulusCI (cci)
 - **Source Format**: SFDX
@@ -27,7 +27,7 @@ A hostel room/bed reservation system for Salesforce orgs, surfaced through LWR E
 ## Rules for Claude
 
 ### IMPORTANT: Confirm before modifying `force-app/` metadata
-This is the managed package source.
+This is the package source.
 
 ### Code Conventions
 - **Apex**: camelCase methods, PascalCase classes
@@ -49,7 +49,7 @@ This is the managed package source.
 - Use kebab-case for branch names
 
 ## Source Directory
-- `force-app/` — Main managed package source (2GP)
+- `force-app/` — Main package source (Unlocked)
 
 ## CumulusCI Commands
 - `cci flow run dev_org` — Set up a scratch dev org

@@ -2,8 +2,7 @@ minimum_cumulusci_version: '3.43.0'
 project:
     name: cUnite_HostelBooking
     package:
-        name: 'cUnite Hostel Booking'
-        namespace: cUnite
+        name: 'Hostel Booking'
         api_version: '64.0'
     git:
     source_format: sfdx
@@ -47,8 +46,6 @@ orgs:
         dev:
             config_file: orgs/dev.json
             days: 30
-            namespaced: True
 
         release:
             config_file: orgs/release.json
-            namespaced: True

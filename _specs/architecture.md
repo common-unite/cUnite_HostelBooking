@@ -1,7 +1,7 @@
 # Hostel Booking — Architecture
 
 ## Overview
-A hostel room/bed reservation system built as a Salesforce 2GP managed package (namespace: `cUnite`).
+A hostel room/bed reservation system built as a Salesforce unlocked package (non-namespaced).
 Surfaced through LWR Experience Cloud sites. Inspired by the HI USA booking portal (bookings.hiusa.org).
 
 ## Design Principles
@@ -16,18 +16,18 @@ Surfaced through LWR Experience Cloud sites. Inspired by the HI USA booking port
 
 ### Product2 — Accommodation Types (Catalog)
 
-RecordType: `cUnite__Accommodation`
+RecordType: `Accommodation`
 
 Standard fields used: Name, Description, Family, IsActive
 
 | Custom Field | Type | Purpose |
 |-------------|------|---------|
-| `cUnite__Gender__c` | Picklist (Women's, Men's, Mixed, N/A) | Dorm gender designation |
-| `cUnite__Pricing_Model__c` | Picklist (Per Person, Per Room) | How rates are calculated |
-| `cUnite__Max_Guests__c` | Number | Max guests per booking unit |
-| `cUnite__Amenities__c` | Long Text Area | Bullet-point amenities for detail view |
-| `cUnite__Image_URL__c` | URL | Photo for expandable card |
-| `cUnite__Display_Order__c` | Number | Sort order in UI |
+| `Gender__c` | Picklist (Women's, Men's, Mixed, N/A) | Dorm gender designation |
+| `Pricing_Model__c` | Picklist (Per Person, Per Room) | How rates are calculated |
+| `Max_Guests__c` | Number | Max guests per booking unit |
+| `Amenities__c` | Long Text Area | Bullet-point amenities for detail view |
+| `Image_URL__c` | URL | Photo for expandable card |
+| `Display_Order__c` | Number | Sort order in UI |
 
 Product2.Family picklist values: "Dorm Bed", "Private Room" — used for section grouping.
 
@@ -38,14 +38,14 @@ Seasonal/date-based pricing deferred to a later phase.
 
 ### Asset — Physical Rooms & Beds (Inventory)
 
-RecordType: `cUnite__Accommodation`
+RecordType: `Accommodation`
 
 Standard fields used: Name, Product2Id, ParentId, Status, SerialNumber
 
 | Custom Field | Type | Purpose |
 |-------------|------|---------|
-| `cUnite__Is_Bookable__c` | Checkbox (default: true) | Marks unit as reservable |
-| `cUnite__Floor__c` | Text | Floor/location info |
+| `Is_Bookable__c` | Checkbox (default: true) | Marks unit as reservable |
+| `Floor__c` | Text | Floor/location info |
 
 **Hierarchy pattern:**
 ```
@@ -62,17 +62,17 @@ Private:
 
 ### Order — Reservation (Booking)
 
-RecordType: `cUnite__Reservation`
+RecordType: `Reservation`
 
 Standard fields used: AccountId, BillToContactId, EffectiveDate (check-in), EndDate (check-out),
 Status, TotalAmount, Pricebook2Id
 
 | Custom Field | Type | Purpose |
 |-------------|------|---------|
-| `cUnite__Confirmation_Number__c` | Text (Unique, External ID) | Booking reference |
-| `cUnite__Number_of_Guests__c` | Number | Total guest count |
-| `cUnite__Special_Requests__c` | Long Text Area | Guest notes |
-| `cUnite__Number_of_Nights__c` | Formula (Number) | `EndDate - EffectiveDate` |
+| `Confirmation_Number__c` | Text (Unique, External ID) | Booking reference |
+| `Number_of_Guests__c` | Number | Total guest count |
+| `Special_Requests__c` | Long Text Area | Guest notes |
+| `Number_of_Nights__c` | Formula (Number) | `EndDate - EffectiveDate` |
 
 **Custom OrderStatus values:**
 
@@ -91,8 +91,8 @@ Standard fields used: OrderId, Product2Id, PricebookEntryId, Quantity, UnitPrice
 
 | Custom Field | Type | Purpose |
 |-------------|------|---------|
-| `cUnite__Asset__c` | Lookup(Asset) | The specific room/bed reserved |
-| `cUnite__Number_of_Guests__c` | Number | Guest count for this line (dorms) |
+| `Asset__c` | Lookup(Asset) | The specific room/bed reserved |
+| `Number_of_Guests__c` | Number | Guest count for this line (dorms) |
 
 ---
 
@@ -106,7 +106,7 @@ Available per type = Total bookable Assets grouped by Product2Id
 
 Overlap: Order.EffectiveDate < checkOutDate AND Order.EndDate > checkInDate
 Filter:  Order.Status NOT IN ('Cancelled', 'No Show')
-         Asset.cUnite__Is_Bookable__c = true
+         Asset.Is_Bookable__c = true
 
 Example: 8 beds of type "Women's 8-Bed Dorm"
          7 have OrderItems overlapping the searched dates

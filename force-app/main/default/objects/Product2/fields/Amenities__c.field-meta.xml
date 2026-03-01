@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>cUnite__Amenities__c</fullName>
+    <fullName>Amenities__c</fullName>
     <label>Amenities</label>
     <type>LongTextArea</type>
     <length>5000</length>

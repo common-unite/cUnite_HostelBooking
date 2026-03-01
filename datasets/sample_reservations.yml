@@ -52,9 +52,9 @@
       SalesforceQuery.find_record:
         from: Pricebook2
         where: IsStandard = true
-    cUnite__Check_In_Date__c: ${{today}}
-    cUnite__Check_Out_Date__c: ${{today + relativedelta(days=3)}}
-    cUnite__Number_of_Guests__c: 5
+    Check_In_Date__c: ${{today}}
+    Check_Out_Date__c: ${{today + relativedelta(days=3)}}
+    Number_of_Guests__c: 5
 
 - object: Opportunity
   nickname: opp_john
@@ -66,9 +66,9 @@
       SalesforceQuery.find_record:
         from: Pricebook2
         where: IsStandard = true
-    cUnite__Check_In_Date__c: ${{today}}
-    cUnite__Check_Out_Date__c: ${{today + relativedelta(days=2)}}
-    cUnite__Number_of_Guests__c: 5
+    Check_In_Date__c: ${{today}}
+    Check_Out_Date__c: ${{today + relativedelta(days=2)}}
+    Number_of_Guests__c: 5
 
 - object: Opportunity
   nickname: opp_jane2
@@ -80,9 +80,9 @@
       SalesforceQuery.find_record:
         from: Pricebook2
         where: IsStandard = true
-    cUnite__Check_In_Date__c: ${{today}}
-    cUnite__Check_Out_Date__c: ${{today + relativedelta(days=5)}}
-    cUnite__Number_of_Guests__c: 6
+    Check_In_Date__c: ${{today}}
+    Check_Out_Date__c: ${{today + relativedelta(days=5)}}
+    Number_of_Guests__c: 6
 
 # ============================================================
 # OpportunityLineItems — One per reserved bed/room
@@ -103,11 +103,11 @@
         where: Product2.Name LIKE 'Women%8-Bed Dorm' AND Pricebook2.IsStandard = true
     Quantity: 1
     UnitPrice: 39.00
-    cUnite__Asset__c:
+    Asset__c:
       SalesforceQuery.find_record:
         from: Asset
         where: Name = 'W8-Bed-101-1'
-    cUnite__Number_of_Guests__c: 1
+    Number_of_Guests__c: 1
 
 - object: OpportunityLineItem
   fields:
@@ -123,11 +123,11 @@
         where: Product2.Name LIKE 'Women%8-Bed Dorm' AND Pricebook2.IsStandard = true
     Quantity: 1
     UnitPrice: 39.00
-    cUnite__Asset__c:
+    Asset__c:
       SalesforceQuery.find_record:
         from: Asset
         where: Name = 'W8-Bed-101-2'
-    cUnite__Number_of_Guests__c: 1
+    Number_of_Guests__c: 1
 
 - object: OpportunityLineItem
   fields:
@@ -143,11 +143,11 @@
         where: Product2.Name LIKE 'Women%8-Bed Dorm' AND Pricebook2.IsStandard = true
     Quantity: 1
     UnitPrice: 39.00
-    cUnite__Asset__c:
+    Asset__c:
       SalesforceQuery.find_record:
         from: Asset
         where: Name = 'W8-Bed-101-3'
-    cUnite__Number_of_Guests__c: 1
+    Number_of_Guests__c: 1
 
 # --- Opp 1 (Jane): 2 Women's 4-Bed beds ---
 - object: OpportunityLineItem
@@ -164,11 +164,11 @@
         where: Product2.Name LIKE 'Women%4-Bed Dorm' AND Pricebook2.IsStandard = true
     Quantity: 1
     UnitPrice: 49.00
-    cUnite__Asset__c:
+    Asset__c:
       SalesforceQuery.find_record:
         from: Asset
         where: Name = 'W4-Bed-201-1'
-    cUnite__Number_of_Guests__c: 1
+    Number_of_Guests__c: 1
 
 - object: OpportunityLineItem
   fields:
@@ -184,11 +184,11 @@
         where: Product2.Name LIKE 'Women%4-Bed Dorm' AND Pricebook2.IsStandard = true
     Quantity: 1
     UnitPrice: 49.00
-    cUnite__Asset__c:
+    Asset__c:
       SalesforceQuery.find_record:
         from: Asset
         where: Name = 'W4-Bed-201-2'
-    cUnite__Number_of_Guests__c: 1
+    Number_of_Guests__c: 1
 
 # --- Opp 2 (John): 2 Women's 8-Bed beds ---
 - object: OpportunityLineItem
@@ -205,11 +205,11 @@
         where: Product2.Name LIKE 'Women%8-Bed Dorm' AND Pricebook2.IsStandard = true
     Quantity: 1
     UnitPrice: 39.00
-    cUnite__Asset__c:
+    Asset__c:
       SalesforceQuery.find_record:
         from: Asset
         where: Name = 'W8-Bed-101-4'
-    cUnite__Number_of_Guests__c: 1
+    Number_of_Guests__c: 1
 
 - object: OpportunityLineItem
   fields:
@@ -225,11 +225,11 @@
         where: Product2.Name LIKE 'Women%8-Bed Dorm' AND Pricebook2.IsStandard = true
     Quantity: 1
     UnitPrice: 39.00
-    cUnite__Asset__c:
+    Asset__c:
       SalesforceQuery.find_record:
         from: Asset
         where: Name = 'W8-Bed-101-5'
-    cUnite__Number_of_Guests__c: 1
+    Number_of_Guests__c: 1
 
 # --- Opp 2 (John): 1 Women's 4-Bed bed ---
 - object: OpportunityLineItem
@@ -246,11 +246,11 @@
         where: Product2.Name LIKE 'Women%4-Bed Dorm' AND Pricebook2.IsStandard = true
     Quantity: 1
     UnitPrice: 49.00
-    cUnite__Asset__c:
+    Asset__c:
       SalesforceQuery.find_record:
         from: Asset
         where: Name = 'W4-Bed-201-3'
-    cUnite__Number_of_Guests__c: 1
+    Number_of_Guests__c: 1
 
 # --- Opp 2 (John): 1 Men's 4-Bed bed ---
 - object: OpportunityLineItem
@@ -267,11 +267,11 @@
         where: Product2.Name LIKE 'Men%4-Bed Dorm' AND Pricebook2.IsStandard = true
     Quantity: 1
     UnitPrice: 54.00
-    cUnite__Asset__c:
+    Asset__c:
       SalesforceQuery.find_record:
         from: Asset
         where: Name = 'M4-Bed-202-1'
-    cUnite__Number_of_Guests__c: 1
+    Number_of_Guests__c: 1
 
 # --- Opp 2 (John): 1 Private Queen Ensuite ---
 - object: OpportunityLineItem
@@ -288,11 +288,11 @@
         where: Product2.Name = 'Private Queen Ensuite' AND Pricebook2.IsStandard = true
     Quantity: 1
     UnitPrice: 159.00
-    cUnite__Asset__c:
+    Asset__c:
       SalesforceQuery.find_record:
         from: Asset
         where: Name = 'PQ-Room-301'
-    cUnite__Number_of_Guests__c: 2
+    Number_of_Guests__c: 2
 
 # --- Opp 3 (Jane): 2 Private Queen & Bunks rooms ---
 - object: OpportunityLineItem
@@ -309,11 +309,11 @@
         where: Product2.Name = 'Private Queen & Bunks Ensuite' AND Pricebook2.IsStandard = true
     Quantity: 1
     UnitPrice: 189.00
-    cUnite__Asset__c:
+    Asset__c:
       SalesforceQuery.find_record:
         from: Asset
         where: Name = 'PQB-Room-301'
-    cUnite__Number_of_Guests__c: 4
+    Number_of_Guests__c: 4
 
 - object: OpportunityLineItem
   fields:
@@ -329,8 +329,8 @@
         where: Product2.Name = 'Private Queen & Bunks Ensuite' AND Pricebook2.IsStandard = true
     Quantity: 1
     UnitPrice: 189.00
-    cUnite__Asset__c:
+    Asset__c:
       SalesforceQuery.find_record:
         from: Asset
         where: Name = 'PQB-Room-302'
-    cUnite__Number_of_Guests__c: 4
+    Number_of_Guests__c: 4

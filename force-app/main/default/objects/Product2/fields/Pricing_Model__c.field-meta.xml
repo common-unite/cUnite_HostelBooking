@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>cUnite__Pricing_Model__c</fullName>
+    <fullName>Pricing_Model__c</fullName>
     <label>Pricing Model</label>
     <type>Picklist</type>
     <required>false</required>

@@ -18,13 +18,13 @@ private class Hostel_BookingController_Test {
         );
 
         Assert.isNotNull(oppId);
-        Opportunity opp = [SELECT StageName, cUnite__Check_In_Date__c, cUnite__Number_of_Guests__c FROM Opportunity WHERE Id = :oppId];
+        Opportunity opp = [SELECT StageName, Check_In_Date__c, Number_of_Guests__c FROM Opportunity WHERE Id = :oppId];
         Assert.areEqual('Prospecting', opp.StageName);
-        Assert.areEqual(Date.newInstance(2026, 6, 15), opp.cUnite__Check_In_Date__c);
+        Assert.areEqual(Date.newInstance(2026, 6, 15), opp.Check_In_Date__c);
 
-        List<OpportunityLineItem> olis = [SELECT cUnite__Asset__c FROM OpportunityLineItem WHERE OpportunityId = :oppId];
+        List<OpportunityLineItem> olis = [SELECT Asset__c FROM OpportunityLineItem WHERE OpportunityId = :oppId];
         Assert.areEqual(1, olis.size());
-        Assert.isNotNull(olis[0].cUnite__Asset__c, 'OLI should have an assigned asset');
+        Assert.isNotNull(olis[0].Asset__c, 'OLI should have an assigned asset');
     }
 
     @IsTest

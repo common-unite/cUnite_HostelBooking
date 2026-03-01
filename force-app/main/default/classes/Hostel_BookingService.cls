@@ -53,15 +53,15 @@ public with sharing class Hostel_BookingService {
         // 3. Find reserved asset Ids in the date range (open or closed-won Opps)
         Set<Id> reservedAssetIds = new Set<Id>();
         for (OpportunityLineItem oli : [
-            SELECT cUnite__Asset__c
+            SELECT Asset__c
             FROM OpportunityLineItem
-            WHERE cUnite__Asset__c != NULL
-              AND cUnite__Asset__r.Product2Id IN :productIds
-              AND Opportunity.cUnite__Check_In_Date__c < :checkOutDate
-              AND Opportunity.cUnite__Check_Out_Date__c > :checkInDate
+            WHERE Asset__c != NULL
+              AND Asset__r.Product2Id IN :productIds
+              AND Opportunity.Check_In_Date__c < :checkOutDate
+              AND Opportunity.Check_Out_Date__c > :checkInDate
               AND (Opportunity.IsClosed = FALSE OR Opportunity.IsWon = TRUE)
         ]) {
-            reservedAssetIds.add(oli.cUnite__Asset__c);
+            reservedAssetIds.add(oli.Asset__c);
         }
 
         // 4. Query available assets per product (bookable, not reserved)
@@ -70,7 +70,7 @@ public with sharing class Hostel_BookingService {
             SELECT Id, Product2Id
             FROM Asset
             WHERE Product2Id IN :productIds
-              AND cUnite__Is_Bookable__c = TRUE
+              AND Is_Bookable__c = TRUE
               AND Id NOT IN :reservedAssetIds
             ORDER BY Name ASC
         ]) {
@@ -97,9 +97,9 @@ public with sharing class Hostel_BookingService {
             CloseDate = Date.today(),
             StageName = 'Prospecting',
             Pricebook2Id = stdPricebook.Id,
-            cUnite__Check_In_Date__c = checkInDate,
-            cUnite__Check_Out_Date__c = checkOutDate,
-            cUnite__Number_of_Guests__c = guests
+            Check_In_Date__c = checkInDate,
+            Check_Out_Date__c = checkOutDate,
+            Number_of_Guests__c = guests
         );
         insert opp;
 
@@ -115,8 +115,8 @@ public with sharing class Hostel_BookingService {
                     PricebookEntryId = pbe.Id,
                     UnitPrice = pbe.UnitPrice,
                     Quantity = 1,
-                    cUnite__Asset__c = available[i].Id,
-                    cUnite__Number_of_Guests__c = 1
+                    Asset__c = available[i].Id,
+                    Number_of_Guests__c = 1
                 ));
             }
         }

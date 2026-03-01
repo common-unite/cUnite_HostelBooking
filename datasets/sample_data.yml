@@ -22,11 +22,11 @@
     Name: Women's 8-Bed Dorm
     Family: Dorm Bed
     IsActive: true
-    cUnite__Gender__c: "Women's"
-    cUnite__Pricing_Model__c: Per Person
-    cUnite__Max_Guests__c: 8
-    cUnite__Display_Order__c: 10
-    cUnite__Amenities__c: |
+    Gender__c: "Women's"
+    Pricing_Model__c: Per Person
+    Max_Guests__c: 8
+    Display_Order__c: 10
+    Amenities__c: |
       1 Twin Bunk Bed in a Women's only 8-bed dormitory
       Room shared with hostel-assigned roommates
       Air Conditioning
@@ -42,11 +42,11 @@
     Name: Women's 4-Bed Dorm
     Family: Dorm Bed
     IsActive: true
-    cUnite__Gender__c: "Women's"
-    cUnite__Pricing_Model__c: Per Person
-    cUnite__Max_Guests__c: 4
-    cUnite__Display_Order__c: 20
-    cUnite__Amenities__c: |
+    Gender__c: "Women's"
+    Pricing_Model__c: Per Person
+    Max_Guests__c: 4
+    Display_Order__c: 20
+    Amenities__c: |
       1 Twin Bunk Bed in a Women's only 4-bed dormitory
       Room shared with hostel-assigned roommates
       Air Conditioning
@@ -62,11 +62,11 @@
     Name: Men's 4-Bed Dorm
     Family: Dorm Bed
     IsActive: true
-    cUnite__Gender__c: "Men's"
-    cUnite__Pricing_Model__c: Per Person
-    cUnite__Max_Guests__c: 4
-    cUnite__Display_Order__c: 30
-    cUnite__Amenities__c: |
+    Gender__c: "Men's"
+    Pricing_Model__c: Per Person
+    Max_Guests__c: 4
+    Display_Order__c: 30
+    Amenities__c: |
       1 Twin Bunk Bed in a Men's only 4-bed dormitory
       Room shared with hostel-assigned roommates
       Air Conditioning
@@ -82,11 +82,11 @@
     Name: Private Queen Ensuite
     Family: Private Room
     IsActive: true
-    cUnite__Gender__c: N/A
-    cUnite__Pricing_Model__c: Per Room
-    cUnite__Max_Guests__c: 2
-    cUnite__Display_Order__c: 40
-    cUnite__Amenities__c: |
+    Gender__c: N/A
+    Pricing_Model__c: Per Room
+    Max_Guests__c: 2
+    Display_Order__c: 40
+    Amenities__c: |
       1 Queen Bed in a private room
       Private ensuite bathroom
       Air Conditioning
@@ -101,11 +101,11 @@
     Name: Private Queen & Bunks Ensuite
     Family: Private Room
     IsActive: true
-    cUnite__Gender__c: N/A
-    cUnite__Pricing_Model__c: Per Room
-    cUnite__Max_Guests__c: 6
-    cUnite__Display_Order__c: 50
-    cUnite__Amenities__c: |
+    Gender__c: N/A
+    Pricing_Model__c: Per Room
+    Max_Guests__c: 6
+    Display_Order__c: 50
+    Amenities__c: |
       1 Queen Bed plus 2 Twin Bunk Beds in a private room
       Private ensuite bathroom
       Air Conditioning
@@ -191,8 +191,7 @@
     AccountId:
       reference: hostel_account
     Status: Installed
-    cUnite__Is_Bookable__c: false
-    cUnite__Floor__c: "1st Floor"
+    Is_Bookable__c: false
 
 - object: Asset
   count: 8
@@ -205,8 +204,7 @@
     AccountId:
       reference: hostel_account
     Status: Installed
-    cUnite__Is_Bookable__c: true
-    cUnite__Floor__c: "1st Floor"
+    Is_Bookable__c: true
 
 # Women's 4-Bed Dorm: 1 parent room + 4 child beds
 - object: Asset
@@ -218,8 +216,7 @@
     AccountId:
       reference: hostel_account
     Status: Installed
-    cUnite__Is_Bookable__c: false
-    cUnite__Floor__c: "2nd Floor"
+    Is_Bookable__c: false
 
 - object: Asset
   count: 4
@@ -232,8 +229,7 @@
     AccountId:
       reference: hostel_account
     Status: Installed
-    cUnite__Is_Bookable__c: true
-    cUnite__Floor__c: "2nd Floor"
+    Is_Bookable__c: true
 
 # Men's 4-Bed Dorm: 1 parent room + 4 child beds
 - object: Asset
@@ -245,8 +241,7 @@
     AccountId:
       reference: hostel_account
     Status: Installed
-    cUnite__Is_Bookable__c: false
-    cUnite__Floor__c: "2nd Floor"
+    Is_Bookable__c: false
 
 - object: Asset
   count: 4
@@ -259,8 +254,7 @@
     AccountId:
       reference: hostel_account
     Status: Installed
-    cUnite__Is_Bookable__c: true
-    cUnite__Floor__c: "2nd Floor"
+    Is_Bookable__c: true
 
 # Private Queen Ensuite: 3 bookable rooms (no children)
 - object: Asset
@@ -272,8 +266,7 @@
     AccountId:
       reference: hostel_account
     Status: Installed
-    cUnite__Is_Bookable__c: true
-    cUnite__Floor__c: "3rd Floor"
+    Is_Bookable__c: true
 
 # Private Queen & Bunks Ensuite: 4 bookable rooms (no children)
 - object: Asset
@@ -285,5 +278,4 @@
     AccountId:
       reference: hostel_account
     Status: Installed
-    cUnite__Is_Bookable__c: true
-    cUnite__Floor__c: "3rd Floor"
+    Is_Bookable__c: true

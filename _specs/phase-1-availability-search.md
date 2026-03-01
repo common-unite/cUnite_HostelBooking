@@ -98,33 +98,33 @@ Build the core data model (custom fields + record types on standard objects) and
 ### Product2 — Custom Fields
 | Field API Name | Type | Description |
 |---------------|------|-------------|
-| cUnite__Gender__c | Picklist (Women's, Men's, Mixed, N/A) | Dorm gender designation |
-| cUnite__Pricing_Model__c | Picklist (Per Person, Per Room) | Rate calculation model |
-| cUnite__Max_Guests__c | Number(3,0) | Max guests per booking unit |
-| cUnite__Amenities__c | Long Text Area(5000) | Bullet-point amenities |
-| cUnite__Image_URL__c | URL | Photo for expandable detail |
-| cUnite__Display_Order__c | Number(3,0) | Sort order in UI |
+| Gender__c | Picklist (Women's, Men's, Mixed, N/A) | Dorm gender designation |
+| Pricing_Model__c | Picklist (Per Person, Per Room) | Rate calculation model |
+| Max_Guests__c | Number(3,0) | Max guests per booking unit |
+| Amenities__c | Long Text Area(5000) | Bullet-point amenities |
+| Image_URL__c | URL | Photo for expandable detail |
+| Display_Order__c | Number(3,0) | Sort order in UI |
 
-RecordType: `cUnite__Accommodation`
+RecordType: `Accommodation`
 Product2.Family picklist values: "Dorm Bed", "Private Room"
 
 ### Asset — Custom Fields
 | Field API Name | Type | Description |
 |---------------|------|-------------|
-| cUnite__Is_Bookable__c | Checkbox (default: true) | Marks as reservable unit |
-| cUnite__Floor__c | Text(10) | Floor/location |
+| Is_Bookable__c | Checkbox (default: true) | Marks as reservable unit |
+| Floor__c | Text(10) | Floor/location |
 
-RecordType: `cUnite__Accommodation`
+RecordType: `Accommodation`
 
 ### Order — Custom Fields
 | Field API Name | Type | Description |
 |---------------|------|-------------|
-| cUnite__Confirmation_Number__c | Text(20) Unique, External ID | Booking reference (RES-XXXXX) |
-| cUnite__Number_of_Guests__c | Number(3,0) | Total guest count |
-| cUnite__Special_Requests__c | Long Text Area(5000) | Guest notes |
-| cUnite__Number_of_Nights__c | Formula(Number) | EndDate - EffectiveDate |
+| Confirmation_Number__c | Text(20) Unique, External ID | Booking reference (RES-XXXXX) |
+| Number_of_Guests__c | Number(3,0) | Total guest count |
+| Special_Requests__c | Long Text Area(5000) | Guest notes |
+| Number_of_Nights__c | Formula(Number) | EndDate - EffectiveDate |
 
-RecordType: `cUnite__Reservation`
+RecordType: `Reservation`
 
 Custom OrderStatus values:
 - Pending (Draft), Confirmed (Activated), Checked In (Activated), Checked Out (Activated), Cancelled (Activated), No Show (Activated)
@@ -132,8 +132,8 @@ Custom OrderStatus values:
 ### OrderItem — Custom Fields
 | Field API Name | Type | Description |
 |---------------|------|-------------|
-| cUnite__Asset__c | Lookup(Asset) | Specific room/bed reserved |
-| cUnite__Number_of_Guests__c | Number(3,0) | Guests for this line |
+| Asset__c | Lookup(Asset) | Specific room/bed reserved |
+| Number_of_Guests__c | Number(3,0) | Guests for this line |
 
 ## UI/UX
 

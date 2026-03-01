@@ -1,18 +1,50 @@
-# Salesforce DX Project: Next Steps
+# Hostel Booking
 
-Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
+A Salesforce unlocked package for hostel room/bed reservation, surfaced through LWR Experience Cloud sites. Supports dorm beds (per-person pricing) and private rooms (per-room pricing) with real-time availability search and booking.
 
-## How Do You Plan to Deploy Your Changes?
+## Package Details
 
-Do you want to deploy a set of changes, or create a self-contained application? Choose a [development model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models).
+- **Package Type**: Unlocked (non-namespaced)
+- **API Version**: 64.0
+- **Build System**: CumulusCI
 
-## Configure Your Salesforce DX Project
+## Features
 
-The `sfdx-project.json` file contains useful configuration information for your project. See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm) in the _Salesforce DX Developer Guide_ for details about this file.
+- Real-time availability calculation across dorm beds and private rooms
+- Date-range-aware inventory management (overlapping bookings detected automatically)
+- 15-minute auto-expiry for unpaid reservations
+- Optional campaign-based booking windows (restrict dates to event periods)
+- Optional post-booking screen flow integration
+- Zero custom objects — built entirely on standard Salesforce objects (Product2, Asset, Opportunity, OpportunityLineItem, Contact)
 
-## Read All About It
+## Data Model
 
-- [Salesforce Extensions Documentation](https://developer.salesforce.com/tools/vscode/)
-- [Salesforce CLI Setup Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm)
-- [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro.htm)
-- [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference.htm)
+| Layer | Object | Purpose |
+|-------|--------|---------|
+| Catalog | Product2 | Accommodation types (Family: Dorm Bed / Private Room) |
+| Pricing | PricebookEntry | Nightly rates |
+| Inventory | Asset | Physical rooms/beds with hierarchy |
+| Booking | Opportunity | Reservations with check-in/out dates (StageName lifecycle) |
+| Booking Detail | OpportunityLineItem | Line items linking to specific Asset |
+| Guest | Contact | Guest records |
+
+## Setup
+
+See [Setup and Admin Guide](documents/SETUP_AND_ADMIN_GUIDE.md) for full installation and configuration instructions.
+
+## Development
+
+```bash
+# Set up a scratch dev org
+cci flow run dev_org
+
+# Run Apex tests
+cci task run run_tests
+
+# Deploy to scratch org
+sf project deploy start --target-org dev
+```
+
+## License
+
+Copyright (c) common-unite. All rights reserved.
