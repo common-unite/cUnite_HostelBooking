@@ -85,7 +85,7 @@
     Number_of_Guests__c: 6
 
 # ============================================================
-# OpportunityLineItems — One per reserved bed/room
+# OpportunityLineItems — One per product type per reservation
 # ============================================================
 
 # --- Opp 1 (Jane): 3 Women's 8-Bed beds ---
@@ -101,53 +101,9 @@
       SalesforceQuery.find_record:
         from: PricebookEntry
         where: Product2.Name LIKE 'Women%8-Bed Dorm' AND Pricebook2.IsStandard = true
-    Quantity: 1
+    Quantity: 3
     UnitPrice: 39.00
-    Asset__c:
-      SalesforceQuery.find_record:
-        from: Asset
-        where: Name = 'W8-Bed-101-1'
-    Number_of_Guests__c: 1
-
-- object: OpportunityLineItem
-  fields:
-    OpportunityId:
-      reference: opp_jane
-    Product2Id:
-      SalesforceQuery.find_record:
-        from: Product2
-        where: Name LIKE 'Women%8-Bed Dorm'
-    PricebookEntryId:
-      SalesforceQuery.find_record:
-        from: PricebookEntry
-        where: Product2.Name LIKE 'Women%8-Bed Dorm' AND Pricebook2.IsStandard = true
-    Quantity: 1
-    UnitPrice: 39.00
-    Asset__c:
-      SalesforceQuery.find_record:
-        from: Asset
-        where: Name = 'W8-Bed-101-2'
-    Number_of_Guests__c: 1
-
-- object: OpportunityLineItem
-  fields:
-    OpportunityId:
-      reference: opp_jane
-    Product2Id:
-      SalesforceQuery.find_record:
-        from: Product2
-        where: Name LIKE 'Women%8-Bed Dorm'
-    PricebookEntryId:
-      SalesforceQuery.find_record:
-        from: PricebookEntry
-        where: Product2.Name LIKE 'Women%8-Bed Dorm' AND Pricebook2.IsStandard = true
-    Quantity: 1
-    UnitPrice: 39.00
-    Asset__c:
-      SalesforceQuery.find_record:
-        from: Asset
-        where: Name = 'W8-Bed-101-3'
-    Number_of_Guests__c: 1
+    Number_of_Guests__c: 3
 
 # --- Opp 1 (Jane): 2 Women's 4-Bed beds ---
 - object: OpportunityLineItem
@@ -162,33 +118,9 @@
       SalesforceQuery.find_record:
         from: PricebookEntry
         where: Product2.Name LIKE 'Women%4-Bed Dorm' AND Pricebook2.IsStandard = true
-    Quantity: 1
+    Quantity: 2
     UnitPrice: 49.00
-    Asset__c:
-      SalesforceQuery.find_record:
-        from: Asset
-        where: Name = 'W4-Bed-201-1'
-    Number_of_Guests__c: 1
-
-- object: OpportunityLineItem
-  fields:
-    OpportunityId:
-      reference: opp_jane
-    Product2Id:
-      SalesforceQuery.find_record:
-        from: Product2
-        where: Name LIKE 'Women%4-Bed Dorm'
-    PricebookEntryId:
-      SalesforceQuery.find_record:
-        from: PricebookEntry
-        where: Product2.Name LIKE 'Women%4-Bed Dorm' AND Pricebook2.IsStandard = true
-    Quantity: 1
-    UnitPrice: 49.00
-    Asset__c:
-      SalesforceQuery.find_record:
-        from: Asset
-        where: Name = 'W4-Bed-201-2'
-    Number_of_Guests__c: 1
+    Number_of_Guests__c: 2
 
 # --- Opp 2 (John): 2 Women's 8-Bed beds ---
 - object: OpportunityLineItem
@@ -203,33 +135,9 @@
       SalesforceQuery.find_record:
         from: PricebookEntry
         where: Product2.Name LIKE 'Women%8-Bed Dorm' AND Pricebook2.IsStandard = true
-    Quantity: 1
+    Quantity: 2
     UnitPrice: 39.00
-    Asset__c:
-      SalesforceQuery.find_record:
-        from: Asset
-        where: Name = 'W8-Bed-101-4'
-    Number_of_Guests__c: 1
-
-- object: OpportunityLineItem
-  fields:
-    OpportunityId:
-      reference: opp_john
-    Product2Id:
-      SalesforceQuery.find_record:
-        from: Product2
-        where: Name LIKE 'Women%8-Bed Dorm'
-    PricebookEntryId:
-      SalesforceQuery.find_record:
-        from: PricebookEntry
-        where: Product2.Name LIKE 'Women%8-Bed Dorm' AND Pricebook2.IsStandard = true
-    Quantity: 1
-    UnitPrice: 39.00
-    Asset__c:
-      SalesforceQuery.find_record:
-        from: Asset
-        where: Name = 'W8-Bed-101-5'
-    Number_of_Guests__c: 1
+    Number_of_Guests__c: 2
 
 # --- Opp 2 (John): 1 Women's 4-Bed bed ---
 - object: OpportunityLineItem
@@ -246,10 +154,6 @@
         where: Product2.Name LIKE 'Women%4-Bed Dorm' AND Pricebook2.IsStandard = true
     Quantity: 1
     UnitPrice: 49.00
-    Asset__c:
-      SalesforceQuery.find_record:
-        from: Asset
-        where: Name = 'W4-Bed-201-3'
     Number_of_Guests__c: 1
 
 # --- Opp 2 (John): 1 Men's 4-Bed bed ---
@@ -267,10 +171,6 @@
         where: Product2.Name LIKE 'Men%4-Bed Dorm' AND Pricebook2.IsStandard = true
     Quantity: 1
     UnitPrice: 54.00
-    Asset__c:
-      SalesforceQuery.find_record:
-        from: Asset
-        where: Name = 'M4-Bed-202-1'
     Number_of_Guests__c: 1
 
 # --- Opp 2 (John): 1 Private Queen Ensuite ---
@@ -288,10 +188,6 @@
         where: Product2.Name = 'Private Queen Ensuite' AND Pricebook2.IsStandard = true
     Quantity: 1
     UnitPrice: 159.00
-    Asset__c:
-      SalesforceQuery.find_record:
-        from: Asset
-        where: Name = 'PQ-Room-301'
     Number_of_Guests__c: 2
 
 # --- Opp 3 (Jane): 2 Private Queen & Bunks rooms ---
@@ -307,30 +203,6 @@
       SalesforceQuery.find_record:
         from: PricebookEntry
         where: Product2.Name = 'Private Queen & Bunks Ensuite' AND Pricebook2.IsStandard = true
-    Quantity: 1
+    Quantity: 2
     UnitPrice: 189.00
-    Asset__c:
-      SalesforceQuery.find_record:
-        from: Asset
-        where: Name = 'PQB-Room-301'
-    Number_of_Guests__c: 4
-
-- object: OpportunityLineItem
-  fields:
-    OpportunityId:
-      reference: opp_jane2
-    Product2Id:
-      SalesforceQuery.find_record:
-        from: Product2
-        where: Name = 'Private Queen & Bunks Ensuite'
-    PricebookEntryId:
-      SalesforceQuery.find_record:
-        from: PricebookEntry
-        where: Product2.Name = 'Private Queen & Bunks Ensuite' AND Pricebook2.IsStandard = true
-    Quantity: 1
-    UnitPrice: 189.00
-    Asset__c:
-      SalesforceQuery.find_record:
-        from: Asset
-        where: Name = 'PQB-Room-302'
-    Number_of_Guests__c: 4
+    Number_of_Guests__c: 6

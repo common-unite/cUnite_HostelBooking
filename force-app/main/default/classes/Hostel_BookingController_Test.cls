@@ -22,9 +22,9 @@ private class Hostel_BookingController_Test {
         Assert.areEqual('Prospecting', opp.StageName);
         Assert.areEqual(Date.newInstance(2026, 6, 15), opp.Check_In_Date__c);
 
-        List<OpportunityLineItem> olis = [SELECT Asset__c FROM OpportunityLineItem WHERE OpportunityId = :oppId];
+        List<OpportunityLineItem> olis = [SELECT Quantity FROM OpportunityLineItem WHERE OpportunityId = :oppId];
         Assert.areEqual(1, olis.size());
-        Assert.isNotNull(olis[0].Asset__c, 'OLI should have an assigned asset');
+        Assert.areEqual(1, olis[0].Quantity);
     }
 
     @IsTest

@@ -83,22 +83,20 @@ public with sharing class Hostel_AvailabilityService {
             totalByProduct.put((Id) ar.get('Product2Id'), (Integer) ar.get('cnt'));
         }
 
-        // 3. Count reserved (conflicting) assets per product type in the date range.
-        //    An OLI's asset is reserved if its parent Opportunity overlaps the requested dates
-        //    and the Opp is still open OR closed-won (paid). Excludes only Closed Lost (expired/cancelled).
+        // 3. Count reserved units per product type in the date range.
+        //    Sums OLI.Quantity for overlapping Opportunities that are still open or closed-won.
+        //    Excludes only Closed Lost (expired/cancelled).
         Map<Id, Integer> reservedByProduct = new Map<Id, Integer>();
         for (AggregateResult ar : [
-            SELECT Asset__r.Product2Id prodId, COUNT_DISTINCT(Asset__c) cnt
+            SELECT Product2Id prodId, SUM(Quantity) cnt
             FROM OpportunityLineItem
-            WHERE Asset__c != NULL
-              AND Asset__r.Product2Id IN :productsById.keySet()
-              AND Asset__r.Is_Bookable__c = TRUE
+            WHERE Product2Id IN :productsById.keySet()
               AND Opportunity.Check_In_Date__c < :checkOutDate
               AND Opportunity.Check_Out_Date__c > :checkInDate
               AND (Opportunity.IsClosed = FALSE OR Opportunity.IsWon = TRUE)
-            GROUP BY Asset__r.Product2Id
+            GROUP BY Product2Id
         ]) {
-            reservedByProduct.put((Id) ar.get('prodId'), (Integer) ar.get('cnt'));
+            reservedByProduct.put((Id) ar.get('prodId'), ((Decimal) ar.get('cnt')).intValue());
         }
 
         // 4. Build result map

@@ -31,10 +31,8 @@ private class Hostel_BookingService_Test {
         Assert.areEqual('Prospecting', opp.StageName);
         Assert.areEqual(3, opp.Number_of_Guests__c);
 
-        List<OpportunityLineItem> olis = [SELECT Product2Id, Asset__c FROM OpportunityLineItem WHERE OpportunityId = :oppId];
-        Assert.areEqual(3, olis.size(), '2 dorm beds + 1 private room = 3 line items');
-        for (OpportunityLineItem oli : olis)
-            Assert.isNotNull(oli.Asset__c, 'Each OLI should have an assigned asset');
+        List<OpportunityLineItem> olis = [SELECT Product2Id, Quantity FROM OpportunityLineItem WHERE OpportunityId = :oppId ORDER BY Product2Id];
+        Assert.areEqual(2, olis.size(), '1 OLI per product type (dorm + private)');
     }
 
     @IsTest
@@ -57,13 +55,12 @@ private class Hostel_BookingService_Test {
     }
 
     @IsTest
-    static void createReservation_excludesReservedAssets() {
+    static void createReservation_accountsForReservedQuantity() {
         Product2 dorm = Hostel_TestDataFactory.getDormProduct();
-        Asset bed = [SELECT Id FROM Asset WHERE Product2Id = :dorm.Id ORDER BY Name ASC LIMIT 1];
         Id stdPbId = Test.getStandardPricebookId();
         PricebookEntry pbe = [SELECT Id, UnitPrice FROM PricebookEntry WHERE Product2Id = :dorm.Id AND Pricebook2Id = :stdPbId LIMIT 1];
 
-        // Create existing reservation that holds one bed
+        // Create existing reservation that holds 1 bed (Quantity=1)
         Opportunity existing = new Opportunity(
             Name = 'Existing',
             CloseDate = Date.today(),
@@ -76,10 +73,10 @@ private class Hostel_BookingService_Test {
         insert new OpportunityLineItem(
             OpportunityId = existing.Id, Product2Id = dorm.Id,
             PricebookEntryId = pbe.Id, UnitPrice = pbe.UnitPrice,
-            Quantity = 1, Asset__c = bed.Id
+            Quantity = 1
         );
 
-        // Book 2 of the remaining 2 beds
+        // Book 2 of the remaining 2 beds (3 total - 1 reserved = 2 available)
         Hostel_BookingService.CartItem item = new Hostel_BookingService.CartItem();
         item.productId = dorm.Id;
         item.quantity = 2;
@@ -90,13 +87,9 @@ private class Hostel_BookingService_Test {
             new List<Hostel_BookingService.CartItem>{ item }
         );
 
-        // Verify the reserved bed was NOT assigned to the new reservation
-        Set<Id> assignedAssetIds = new Set<Id>();
-        for (OpportunityLineItem oli : [SELECT Asset__c FROM OpportunityLineItem WHERE OpportunityId = :oppId])
-            assignedAssetIds.add(oli.Asset__c);
-
-        Assert.isFalse(assignedAssetIds.contains(bed.Id), 'Should not assign the already-reserved bed');
-        Assert.areEqual(2, assignedAssetIds.size());
+        // Verify the new OLI has Quantity = 2
+        OpportunityLineItem oli = [SELECT Quantity FROM OpportunityLineItem WHERE OpportunityId = :oppId LIMIT 1];
+        Assert.areEqual(2, oli.Quantity);
     }
 
     @IsTest

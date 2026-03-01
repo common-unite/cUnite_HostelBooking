@@ -42,7 +42,6 @@ private class Hostel_AvailabilityService_Test {
     @IsTest
     static void calculateAvailability_withReservation_reducesAvailability() {
         Product2 dorm = Hostel_TestDataFactory.getDormProduct();
-        Asset bed = [SELECT Id FROM Asset WHERE Product2Id = :dorm.Id LIMIT 1];
         Id stdPbId = Test.getStandardPricebookId();
         PricebookEntry pbe = [SELECT Id, UnitPrice FROM PricebookEntry WHERE Product2Id = :dorm.Id AND Pricebook2Id = :stdPbId LIMIT 1];
 
@@ -58,7 +57,7 @@ private class Hostel_AvailabilityService_Test {
         insert new OpportunityLineItem(
             OpportunityId = opp.Id, Product2Id = dorm.Id,
             PricebookEntryId = pbe.Id, UnitPrice = pbe.UnitPrice,
-            Quantity = 1, Asset__c = bed.Id
+            Quantity = 1
         );
 
         Hostel_AvailabilityService service = new Hostel_AvailabilityService();
