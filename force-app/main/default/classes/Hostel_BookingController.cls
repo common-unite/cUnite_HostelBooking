@@ -2,7 +2,7 @@
  * @AuraEnabled controller for the Book Now action.
  * Thin layer that validates inputs and delegates to Hostel_BookingService.
  */
-public with sharing class Hostel_BookingController {
+public without sharing class Hostel_BookingController {
 
     /**
      * Create a reservation from the cart.

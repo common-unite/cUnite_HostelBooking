@@ -2,7 +2,7 @@
  * @AuraEnabled controller for the hostelBooking LWC.
  * Thin layer that delegates to Hostel_AvailabilityService and shapes results for the UI.
  */
-public with sharing class Hostel_AvailabilityController {
+public without sharing class Hostel_AvailabilityController {
 
     /**
      * Return merged campaign date ranges for a given Campaign.Type value.

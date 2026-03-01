@@ -3,7 +3,7 @@
  * Queries accommodation products, counts bookable assets, and determines
  * availability for a given date range by subtracting reserved units.
  */
-public with sharing class Hostel_AvailabilityService {
+public without sharing class Hostel_AvailabilityService {
 
     private static final Integer DEFAULT_MAX_GUESTS = 1;
     private static final Integer DEFAULT_DISPLAY_ORDER = 999;

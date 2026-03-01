@@ -3,7 +3,7 @@
  * Creates an Opportunity with one OpportunityLineItem per product type,
  * using Quantity to represent the number of beds/rooms booked.
  */
-public with sharing class Hostel_BookingService {
+public without sharing class Hostel_BookingService {
 
     /**
      * Cart item passed from the LWC — one per accommodation type the guest selected.
