@@ -44,16 +44,21 @@ public with sharing class Hostel_BookingService {
             pbeByProduct.put(pbe.Product2Id, pbe);
         }
 
-        // 3. Count total bookable assets and already-reserved quantities per product
-        Map<Id, Integer> totalByProduct = new Map<Id, Integer>();
-        for (AggregateResult ar : [
-            SELECT Product2Id, COUNT(Id) cnt
+        // 3. Lock bookable assets to serialize concurrent bookings.
+        //    Any other transaction booking the same products will wait here
+        //    until this transaction commits, preventing overselling.
+        List<Asset> lockedAssets = [
+            SELECT Id, Product2Id
             FROM Asset
             WHERE Product2Id IN :productIds
               AND Is_Bookable__c = TRUE
-            GROUP BY Product2Id
-        ]) {
-            totalByProduct.put((Id) ar.get('Product2Id'), (Integer) ar.get('cnt'));
+            FOR UPDATE
+        ];
+
+        Map<Id, Integer> totalByProduct = new Map<Id, Integer>();
+        for (Asset a : lockedAssets) {
+            Integer cnt = totalByProduct.containsKey(a.Product2Id) ? totalByProduct.get(a.Product2Id) : 0;
+            totalByProduct.put(a.Product2Id, cnt + 1);
         }
 
         Map<Id, Integer> reservedByProduct = new Map<Id, Integer>();
