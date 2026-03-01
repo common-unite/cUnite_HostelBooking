@@ -1,19 +1,21 @@
 /* ============================
    Hostel Booking — Theme-Aware
-   Uses --dxp-g-* tokens from LWR Experience Builder theme
-   with SLDS fallbacks for non-LWR contexts
+   Only --dxp-g-brand and --dxp-g-brand-contrast are reliable.
+   Other --dxp-g-* tokens (-1, -2, neutral, destructive) vary
+   unpredictably across themes, so we hardcode values that
+   guarantee readable contrast.
    ============================ */
 
 :host {
     --color-brand: var(--dxp-g-brand, var(--slds-g-color-brand-base-50, #0176d3));
     --color-brand-contrast: var(--dxp-g-brand-contrast, #ffffff);
-    --color-brand-light: var(--dxp-g-brand-1, #eef4ff);
-    --color-text: var(--dxp-g-root-contrast, var(--slds-g-color-neutral-base-10, #181818));
-    --color-text-secondary: var(--dxp-g-neutral, var(--slds-g-color-neutral-base-30, #444));
-    --color-text-muted: var(--dxp-g-neutral-1, var(--slds-g-color-neutral-base-40, #5c5c5c));
-    --color-border: var(--dxp-g-neutral-2, #e5e5e5);
-    --color-error: var(--dxp-g-destructive, var(--slds-g-color-error-base-40, #ea001e));
-    --color-error-bg: var(--dxp-g-destructive-1, #fff3f3);
+    --color-brand-light: #eef4ff;
+    --color-text: #181818;
+    --color-text-secondary: #444444;
+    --color-text-muted: #706e6b;
+    --color-border: #e5e5e5;
+    --color-error: #ea001e;
+    --color-error-bg: #fef1f1;
 }
 
 /* Header banner */
