@@ -3,6 +3,7 @@ project:
     name: cUnite_HostelBooking
     package:
         name: 'Hostel Booking'
+        package_type: Unlocked
         api_version: '64.0'
     git:
     source_format: sfdx
